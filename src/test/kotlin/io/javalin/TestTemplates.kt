@@ -11,6 +11,7 @@ import com.mitchellbosecke.pebble.PebbleEngine
 import com.mitchellbosecke.pebble.loader.ClasspathLoader
 import gg.jte.ContentType
 import gg.jte.TemplateEngine
+import io.javalin.jte.JteTestPage
 import io.javalin.jte.PrecompileJteTestClasses
 import io.javalin.plugin.rendering.JavalinRenderer
 import io.javalin.plugin.rendering.markdown.JavalinCommonmark
@@ -172,6 +173,4 @@ class TestTemplates {
         app.get("/") { it.render("/templates/freemarker/test-with-base.ftl", model("foo", "baz")) }
         assertThat(http.get("/").body?.string()).contains("<h3>baz</h3>")
     }
-
-    data class JteTestPage(val hello: String, val world: String)
 }
