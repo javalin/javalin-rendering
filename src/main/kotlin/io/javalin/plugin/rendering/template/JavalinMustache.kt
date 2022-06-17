@@ -17,7 +17,7 @@ import java.io.StringWriter
 
 object JavalinMustache : FileRenderer {
 
-    init {
+    fun init() {
         JavalinRenderer.register(JavalinMustache, ".mustache")
     }
 

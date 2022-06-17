@@ -20,7 +20,7 @@ import java.io.File
 
 object JavalinJte : FileRenderer {
 
-    init {
+    fun init() {
         JavalinRenderer.register(JavalinJte, ".jte", ".kte")
     }
 

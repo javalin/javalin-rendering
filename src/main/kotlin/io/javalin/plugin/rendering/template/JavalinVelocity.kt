@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets
 
 object JavalinVelocity : FileRenderer {
 
-    init {
+    fun init() {
         JavalinRenderer.register(JavalinVelocity, ".vm", ".vtl")
     }
 

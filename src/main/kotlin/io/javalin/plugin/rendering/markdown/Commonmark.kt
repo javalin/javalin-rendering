@@ -16,7 +16,7 @@ import org.commonmark.renderer.html.HtmlRenderer
 
 object JavalinCommonmark : FileRenderer {
 
-    init {
+    fun init() {
         JavalinRenderer.register(JavalinCommonmark, ".md", ".markdown")
     }
 

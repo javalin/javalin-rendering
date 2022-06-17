@@ -13,16 +13,30 @@ import gg.jte.ContentType
 import gg.jte.TemplateEngine
 import io.javalin.jte.PrecompileJteTestClasses
 import io.javalin.plugin.rendering.JavalinRenderer
-import io.javalin.plugin.rendering.template.JavalinJte
-import io.javalin.plugin.rendering.template.JavalinPebble
-import io.javalin.plugin.rendering.template.JavalinVelocity
+import io.javalin.plugin.rendering.markdown.JavalinCommonmark
+import io.javalin.plugin.rendering.template.*
 import io.javalin.plugin.rendering.template.TemplateUtil.model
 import io.javalin.testtools.JavalinTest
 import org.apache.velocity.app.VelocityEngine
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.BeforeClass
 import org.junit.Test
 
 class TestTemplates {
+
+    companion object {
+        @JvmStatic
+        @BeforeClass
+        fun initRenderers() {
+            JavalinCommonmark.init()
+            JavalinFreemarker.init()
+            JavalinJte.init()
+            JavalinMustache.init()
+            JavalinPebble.init()
+            JavalinThymeleaf.init()
+            JavalinVelocity.init()
+        }
+    }
 
     private val defaultBaseModel = model("foo", "bar")
 

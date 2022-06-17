@@ -17,7 +17,7 @@ import java.io.StringWriter
 
 object JavalinPebble : FileRenderer {
 
-    init {
+    fun init() {
         JavalinRenderer.register(JavalinPebble, ".peb", ".pebble")
     }
 

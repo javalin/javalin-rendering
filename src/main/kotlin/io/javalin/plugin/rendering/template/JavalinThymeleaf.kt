@@ -18,7 +18,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 
 object JavalinThymeleaf : FileRenderer {
 
-    init {
+    fun init() {
         JavalinRenderer.register(JavalinThymeleaf, ".html", ".tl", ".thyme", ".thymeleaf")
     }
 
