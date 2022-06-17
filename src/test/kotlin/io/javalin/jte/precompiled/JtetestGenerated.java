@@ -1,6 +1,6 @@
 package io.javalin.jte.precompiled;
 
-import io.javalin.TestTemplates.JteTestPage;
+import io.javalin.jte.JteTestPage;
 
 public final class JtetestGenerated {
     public static final String JTE_NAME = "test.jte";

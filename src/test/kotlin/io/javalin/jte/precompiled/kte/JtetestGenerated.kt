@@ -1,6 +1,6 @@
 package io.javalin.jte.precompiled.kte
 
-import io.javalin.TestTemplates.JteTestPage
+import io.javalin.jte.JteTestPage
 
 class JtetestGenerated {
     companion object {
