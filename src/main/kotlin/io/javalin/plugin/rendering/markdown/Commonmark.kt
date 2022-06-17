@@ -6,12 +6,11 @@
 
 package io.javalin.plugin.rendering.markdown
 
-import io.javalin.core.util.OptionalDependency
-import io.javalin.core.util.Util
+import io.javalin.core.util.DependencyUtil
 import io.javalin.http.Context
 import io.javalin.plugin.rendering.FileRenderer
 import io.javalin.plugin.rendering.JavalinRenderer
-import io.javalin.plugin.rendering.template.*
+import io.javalin.plugin.rendering.RenderingDependency
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 
@@ -38,7 +37,7 @@ object JavalinCommonmark : FileRenderer {
     }
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
-        Util.ensureDependencyPresent(OptionalDependency.COMMONMARK)
+        DependencyUtil.ensurePresence(RenderingDependency.COMMONMARK)
         val fileContent = JavalinCommonmark::class.java.getResource(filePath).readText()
         return (renderer ?: defaultRenderer).render((parser ?: defaultParser).parse(fileContent))
     }

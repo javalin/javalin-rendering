@@ -6,11 +6,11 @@
 
 package io.javalin.plugin.rendering.template
 
+import io.javalin.core.util.DependencyUtil
 import io.javalin.http.Context
 import io.javalin.plugin.rendering.FileRenderer
 import io.javalin.plugin.rendering.JavalinRenderer
-import io.javalin.plugin.rendering.OptionalDependency
-import io.javalin.plugin.rendering.ensureDependencyPresent
+import io.javalin.plugin.rendering.RenderingDependency
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.WebContext
 import org.thymeleaf.templatemode.TemplateMode
@@ -31,7 +31,7 @@ object JavalinThymeleaf : FileRenderer {
     }
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
-        ensureDependencyPresent(OptionalDependency.THYMELEAF)
+        DependencyUtil.ensurePresence(RenderingDependency.THYMELEAF)
         val context = WebContext(ctx.req, ctx.res, ctx.req.servletContext)
         context.setVariables(model)
         return (templateEngine ?: defaultTemplateEngine).process(filePath, context)

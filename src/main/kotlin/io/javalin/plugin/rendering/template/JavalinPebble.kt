@@ -8,12 +8,11 @@ package io.javalin.plugin.rendering.template
 
 import com.mitchellbosecke.pebble.PebbleEngine
 import com.mitchellbosecke.pebble.loader.ClasspathLoader
-import io.javalin.core.util.Util
+import io.javalin.core.util.DependencyUtil
 import io.javalin.http.Context
 import io.javalin.plugin.rendering.FileRenderer
 import io.javalin.plugin.rendering.JavalinRenderer
-import io.javalin.plugin.rendering.OptionalDependency
-import io.javalin.plugin.rendering.ensureDependencyPresent
+import io.javalin.plugin.rendering.RenderingDependency
 import java.io.StringWriter
 
 object JavalinPebble : FileRenderer {
@@ -31,7 +30,7 @@ object JavalinPebble : FileRenderer {
     }
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
-        ensureDependencyPresent(OptionalDependency.PEBBLE)
+        DependencyUtil.ensurePresence(RenderingDependency.PEBBLE)
         val compiledTemplate = (pebbleEngine ?: defaultPebbleEngine).getTemplate(filePath)
         val stringWriter = StringWriter()
         compiledTemplate.evaluate(stringWriter, model)

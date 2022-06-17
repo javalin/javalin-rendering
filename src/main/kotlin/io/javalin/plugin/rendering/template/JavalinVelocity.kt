@@ -6,11 +6,11 @@
 
 package io.javalin.plugin.rendering.template
 
+import io.javalin.core.util.DependencyUtil
 import io.javalin.http.Context
 import io.javalin.plugin.rendering.FileRenderer
 import io.javalin.plugin.rendering.JavalinRenderer
-import io.javalin.plugin.rendering.OptionalDependency
-import io.javalin.plugin.rendering.ensureDependencyPresent
+import io.javalin.plugin.rendering.RenderingDependency
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
 import java.io.StringWriter
@@ -31,7 +31,7 @@ object JavalinVelocity : FileRenderer {
     }
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
-        ensureDependencyPresent(OptionalDependency.VELOCITY)
+        DependencyUtil.ensurePresence(RenderingDependency.VELOCITY)
         val stringWriter = StringWriter()
         (velocityEngine ?: defaultVelocityEngine).getTemplate(filePath, StandardCharsets.UTF_8.name()).merge(
             VelocityContext(model.toMutableMap()), stringWriter

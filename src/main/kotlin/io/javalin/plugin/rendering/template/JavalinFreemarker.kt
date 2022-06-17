@@ -8,11 +8,11 @@ package io.javalin.plugin.rendering.template
 
 import freemarker.template.Configuration
 import freemarker.template.Version
+import io.javalin.core.util.DependencyUtil
 import io.javalin.http.Context
 import io.javalin.plugin.rendering.FileRenderer
 import io.javalin.plugin.rendering.JavalinRenderer
-import io.javalin.plugin.rendering.OptionalDependency
-import io.javalin.plugin.rendering.ensureDependencyPresent
+import io.javalin.plugin.rendering.RenderingDependency
 import java.io.StringWriter
 
 object JavalinFreemarker : FileRenderer {
@@ -30,7 +30,7 @@ object JavalinFreemarker : FileRenderer {
     }
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
-        ensureDependencyPresent(OptionalDependency.FREEMARKER)
+        DependencyUtil.ensurePresence(RenderingDependency.FREEMARKER)
         val stringWriter = StringWriter()
         (configuration ?: defaultConfiguration).getTemplate(filePath).process(model, stringWriter)
         return stringWriter.toString()
