@@ -21,11 +21,11 @@
 
     <repositories>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <id>reposilite-repository</id>
+            <name>Reposilite Repository</name>
+            <url>https://maven.reposilite.com/snapshots</url>
         </repository>
     </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -33,9 +33,9 @@
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.javalin</groupId>
+            <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
-            <version>master-SNAPSHOT</version>
+            <version>5.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
