@@ -4,20 +4,20 @@
  * Licensed under Apache 2.0: https://github.com/tipsy/javalin/blob/master/LICENSE
  */
 
-package io.javalin.plugin.rendering.markdown
+package io.javalin.rendering.markdown
 
 import io.javalin.http.Context
-
-import io.javalin.plugin.rendering.RenderingDependency
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
-import io.javalin.util.DependencyUtil
+import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.Util
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 
 object JavalinCommonmark : FileRenderer {
 
     fun init() {
+        Util.throwIfNotAvailable(RenderingDependency.COMMONMARK)
         JavalinRenderer.register(JavalinCommonmark, ".md", ".markdown")
     }
 
@@ -38,7 +38,6 @@ object JavalinCommonmark : FileRenderer {
     }
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
-        DependencyUtil.ensurePresence(RenderingDependency.COMMONMARK)
         val fileContent = JavalinCommonmark::class.java.getResource(filePath).readText()
         return (renderer ?: defaultRenderer).render((parser ?: defaultParser).parse(fileContent))
     }

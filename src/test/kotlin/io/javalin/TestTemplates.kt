@@ -13,9 +13,14 @@ import gg.jte.ContentType
 import gg.jte.TemplateEngine
 import io.javalin.jte.JteTestPage
 import io.javalin.jte.PrecompileJteTestClasses
-import io.javalin.plugin.rendering.markdown.JavalinCommonmark
-import io.javalin.plugin.rendering.template.*
-import io.javalin.plugin.rendering.template.TemplateUtil.model
+import io.javalin.rendering.markdown.JavalinCommonmark
+import io.javalin.rendering.template.JavalinFreemarker
+import io.javalin.rendering.template.JavalinJte
+import io.javalin.rendering.template.JavalinMustache
+import io.javalin.rendering.template.JavalinPebble
+import io.javalin.rendering.template.JavalinStringTemplate4
+import io.javalin.rendering.template.JavalinThymeleaf
+import io.javalin.rendering.template.JavalinVelocity
 import io.javalin.rendering.JavalinRenderer
 import io.javalin.testtools.JavalinTest
 import org.apache.velocity.app.VelocityEngine
@@ -36,16 +41,16 @@ class TestTemplates {
             JavalinPebble.init()
             JavalinThymeleaf.init()
             JavalinVelocity.init()
-            JavalinStringTemplate4.init({it.verbose(true)})
+            JavalinStringTemplate4.init({ it.verbose(true) })
         }
     }
 
-    private val defaultBaseModel = model("foo", "bar")
+    private val defaultBaseModel = mapOf("foo" to "bar")
 
     @Test
     fun `velocity templates work`() = JavalinTest.test { app, http ->
         JavalinVelocity.configure(JavalinVelocity.defaultVelocityEngine())
-        app.get("/hello") { it.render("/templates/velocity/test.vm", model("message", "Hello Velocity!")) }
+        app.get("/hello") { it.render("/templates/velocity/test.vm", mapOf("message" to "Hello Velocity!")) }
         assertThat(http.get("/hello").body?.string()).isEqualTo("<h1>Hello Velocity!</h1>")
     }
 
@@ -67,31 +72,31 @@ class TestTemplates {
 
     @Test
     fun `freemarker templates work`() = JavalinTest.test { app, http ->
-        app.get("/hello") { it.render("/templates/freemarker/test.ftl", model("message", "Hello Freemarker!")) }
+        app.get("/hello") { it.render("/templates/freemarker/test.ftl", mapOf("message" to "Hello Freemarker!")) }
         assertThat(http.get("/hello").body?.string()).isEqualTo("<h1>Hello Freemarker!</h1>")
     }
 
     @Test
     fun `thymeleaf templates work`() = JavalinTest.test { app, http ->
-        app.get("/hello") { it.render("/templates/thymeleaf/test.html", model("message", "Hello Thymeleaf!")) }
+        app.get("/hello") { it.render("/templates/thymeleaf/test.html", mapOf("message" to "Hello Thymeleaf!")) }
         assertThat(http.get("/hello").body?.string()).isEqualTo("<h1>Hello Thymeleaf!</h1>")
     }
 
     @Test
     fun `thymeleaf url syntax work`() = JavalinTest.test { app, http ->
-        app.get("/hello") { it.render("/templates/thymeleaf/testUrls.html", model("linkParam2", "val2")) }
+        app.get("/hello") { it.render("/templates/thymeleaf/testUrls.html", mapOf("linkParam2" to "val2")) }
         assertThat(http.get("/hello").body?.string()).isEqualTo("<a href=\"/test-link?param1=val1&amp;param2=val2\">Link text</a>")
     }
 
     @Test
     fun `mustache templates work`() = JavalinTest.test { app, http ->
-        app.get("/hello") { it.render("/templates/mustache/test.mustache", model("message", "Hello Mustache!")) }
+        app.get("/hello") { it.render("/templates/mustache/test.mustache", mapOf("message" to "Hello Mustache!")) }
         assertThat(http.get("/hello").body?.string()).isEqualTo("<h1>Hello Mustache!</h1>")
     }
 
     @Test
     fun `pebble templates work`() = JavalinTest.test { app, http ->
-        app.get("/hello1") { it.render("templates/pebble/test.peb", model("message", "Hello Pebble!")) }
+        app.get("/hello1") { it.render("templates/pebble/test.peb", mapOf("message" to "Hello Pebble!")) }
         assertThat(http.get("/hello1").body?.string()).isEqualTo("<h1>Hello Pebble!</h1>")
     }
 
@@ -117,28 +122,28 @@ class TestTemplates {
     @Test
     fun `jte works`() = JavalinTest.test { app, http ->
         JavalinJte.configure(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
-        app.get("/hello") { it.render("test.jte", model("page", JteTestPage("hello", "world"))) }
+        app.get("/hello") { it.render("test.jte", mapOf("page" to JteTestPage("hello", "world"))) }
         assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
     @Test
     fun `jte multiple params work`() = JavalinTest.test { app, http ->
         JavalinJte.configure(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
-        app.get("/hello") { it.render("multiple-params.jte", model("one", "hello", "two", "world")) }
+        app.get("/hello") { it.render("multiple-params.jte", mapOf("one" to "hello", "two" to "world")) }
         assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
     @Test
     fun `jte kotlin works`() = JavalinTest.test { app, http ->
         JavalinJte.configure(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
-        app.get("/hello") { it.render("kte/test.kte", model("page", JteTestPage("hello", "world"))) }
+        app.get("/hello") { it.render("kte/test.kte", mapOf("page" to JteTestPage("hello", "world"))) }
         assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
     @Test
     fun `jte kotlin multiple params work`() = JavalinTest.test { app, http ->
         JavalinJte.configure(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
-        app.get("/hello") { it.render("kte/multiple-params.kte", model("one", "hello", "two", "world")) }
+        app.get("/hello") { it.render("kte/multiple-params.kte", mapOf("one" to "hello", "two" to "world")) }
         assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
@@ -150,13 +155,13 @@ class TestTemplates {
 
     @Test
     fun `stringtemplate4 works`() = JavalinTest.test { app, http ->
-        app.get("/hello") { it.render("test.st",model("message","ST4!")) }
+        app.get("/hello") { it.render("test.st", mapOf("message" to "ST4!")) }
         assertThat(http.get("/hello").body?.string()).contains("<h1>Hello ST4!</h1>")
     }
 
     @Test
     fun `stringtemplate4 embeded works`() = JavalinTest.test { app, http ->
-        app.get("/hello") { it.render("withImport.st",model("message","ST4Import!")) }
+        app.get("/hello") { it.render("withImport.st", mapOf("message" to "ST4Import!")) }
         assertThat(http.get("/hello").body?.string()).contains("<h1>Hello ST4Import!</h1>")
     }
 
@@ -183,7 +188,7 @@ class TestTemplates {
     @Test
     fun `base model overwrite works`() = JavalinTest.test { app, http ->
         JavalinRenderer.baseModelFunction = { ctx -> defaultBaseModel }
-        app.get("/") { it.render("/templates/freemarker/test-with-base.ftl", model("foo", "baz")) }
+        app.get("/") { it.render("/templates/freemarker/test-with-base.ftl", mapOf("foo" to "baz")) }
         assertThat(http.get("/").body?.string()).contains("<h3>baz</h3>")
     }
 }

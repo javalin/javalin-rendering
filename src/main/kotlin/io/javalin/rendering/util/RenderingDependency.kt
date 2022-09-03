@@ -4,9 +4,11 @@
  * Licensed under Apache 2.0: https://github.com/tipsy/javalin/blob/master/LICENSE
  */
 
-package io.javalin.plugin.rendering
+package io.javalin.rendering.util
 
+import io.javalin.util.DependencyUtil
 import io.javalin.util.OptionalDependency;
+import io.javalin.util.Util
 
 enum class RenderingDependency(
     override val displayName: String,
@@ -23,5 +25,15 @@ enum class RenderingDependency(
     MUSTACHE("Mustache", "com.github.mustachejava.MustacheFactory", "com.github.spullara.mustache.java", "compiler", "0.9.7"),
     PEBBLE("Pebble", "com.mitchellbosecke.pebble.PebbleEngine", "io.pebbletemplates", "pebble", "3.1.5"),
     COMMONMARK("Commonmark", "org.commonmark.renderer.html.HtmlRenderer", "org.commonmark", "commonmark", "0.17.1"),
-    STRING_TEMPLATE_4("StringTemplate4", "org.stringtemplate.v4.ST;","org.antlr","ST4","4.3.4"),
+    STRING_TEMPLATE_4("StringTemplate4", "org.stringtemplate.v4.ST", "org.antlr", "ST4", "4.3.4"),
 }
+
+
+object Util {
+    fun throwIfNotAvailable(dependency: RenderingDependency) {
+        if (!Util.classExists(dependency.testClass)) {
+            throw IllegalStateException(DependencyUtil.missingDependencyMessage(dependency))
+        }
+    }
+}
+

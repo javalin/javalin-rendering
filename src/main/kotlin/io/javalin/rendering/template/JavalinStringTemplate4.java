@@ -1,15 +1,16 @@
-package io.javalin.plugin.rendering.template;
+package io.javalin.rendering.template;
 
 import io.javalin.http.Context;
 import io.javalin.rendering.FileRenderer;
 import io.javalin.rendering.JavalinRenderer;
+import io.javalin.rendering.util.RenderingDependency;
+import io.javalin.rendering.util.Util;
+import java.util.Map;
+import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STRawGroupDir;
-
-import java.util.Map;
-import java.util.function.Consumer;
 
 public class JavalinStringTemplate4 implements FileRenderer {
 
@@ -20,6 +21,7 @@ public class JavalinStringTemplate4 implements FileRenderer {
     private static STRawGroupDir group;
 
     public static void init(Consumer<JavalinStringTemplate4Configuration> consumer) {
+        Util.INSTANCE.throwIfNotAvailable(RenderingDependency.STRING_TEMPLATE_4);
         JavalinRenderer.register(new JavalinStringTemplate4(), ".st", ".html.st");
         JavalinStringTemplate4Configuration config = new JavalinStringTemplate4Configuration();
         consumer.accept(config);

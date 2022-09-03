@@ -4,23 +4,25 @@
  * Licensed under Apache 2.0: https://github.com/tipsy/javalin/blob/master/LICENSE
  */
 
-package io.javalin.plugin.rendering.template
+package io.javalin.rendering.template
 
 import gg.jte.ContentType
 import gg.jte.TemplateEngine
 import gg.jte.output.StringOutput
 import gg.jte.resolve.DirectoryCodeResolver
-import io.javalin.util.DependencyUtil
 import io.javalin.http.Context
 import io.javalin.http.servlet.isLocalhost
-import io.javalin.plugin.rendering.RenderingDependency
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
+import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.Util
 import java.io.File
 
 object JavalinJte : FileRenderer {
 
     fun init() {
+        Util.throwIfNotAvailable(RenderingDependency.JTE)
+        Util.throwIfNotAvailable(RenderingDependency.JTE_KOTLIN)
         JavalinRenderer.register(JavalinJte, ".jte", ".kte")
     }
 
@@ -38,11 +40,7 @@ object JavalinJte : FileRenderer {
     }
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
-        DependencyUtil.ensurePresence(RenderingDependency.JTE)
         isDev = isDev ?: isDevFunction(ctx)
-        if (isDev == true && filePath.endsWith(".kte")) {
-            DependencyUtil.ensurePresence(RenderingDependency.JTE_KOTLIN)
-        }
         val stringOutput = StringOutput()
         (templateEngine ?: defaultTemplateEngine).render(filePath, model, stringOutput)
         return stringOutput.toString()

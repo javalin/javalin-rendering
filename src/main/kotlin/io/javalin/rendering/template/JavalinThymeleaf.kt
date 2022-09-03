@@ -4,14 +4,13 @@
  * Licensed under Apache 2.0: https://github.com/tipsy/javalin/blob/master/LICENSE
  */
 
-package io.javalin.plugin.rendering.template
+package io.javalin.rendering.template
 
-import io.javalin.util.DependencyUtil
 import io.javalin.http.Context
-
-import io.javalin.plugin.rendering.RenderingDependency
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
+import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.Util
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.WebContext
 import org.thymeleaf.templatemode.TemplateMode
@@ -21,6 +20,7 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication
 object JavalinThymeleaf : FileRenderer {
 
     fun init() {
+        Util.throwIfNotAvailable(RenderingDependency.THYMELEAF)
         JavalinRenderer.register(JavalinThymeleaf, ".html", ".tl", ".thyme", ".thymeleaf")
     }
 
@@ -33,7 +33,6 @@ object JavalinThymeleaf : FileRenderer {
     }
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
-        DependencyUtil.ensurePresence(RenderingDependency.THYMELEAF)
         // ctx.req.servletContext that is passed to buildApplication has to match ctx.req.servletContext passed into
         // buildExchange. (application.servletContext === ctx.req.servletContext)
         val application = JakartaServletWebApplication.buildApplication(ctx.req().servletContext)

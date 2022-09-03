@@ -4,21 +4,21 @@
  * Licensed under Apache 2.0: https://github.com/tipsy/javalin/blob/master/LICENSE
  */
 
-package io.javalin.plugin.rendering.template
+package io.javalin.rendering.template
 
 import com.github.mustachejava.DefaultMustacheFactory
 import com.github.mustachejava.MustacheFactory
-import io.javalin.util.DependencyUtil
 import io.javalin.http.Context
-
-import io.javalin.plugin.rendering.RenderingDependency
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
+import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.Util
 import java.io.StringWriter
 
 object JavalinMustache : FileRenderer {
 
     fun init() {
+        Util.throwIfNotAvailable(RenderingDependency.MUSTACHE)
         JavalinRenderer.register(JavalinMustache, ".mustache")
     }
 
@@ -31,7 +31,6 @@ object JavalinMustache : FileRenderer {
     }
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
-        DependencyUtil.ensurePresence(RenderingDependency.MUSTACHE)
         val stringWriter = StringWriter()
         (mustacheFactory ?: defaultMustacheFactory).compile(filePath).execute(stringWriter, model).close()
         return stringWriter.toString()
