@@ -151,13 +151,13 @@ class TestTemplates {
     @Test
     fun `stringtemplate4 works`() = JavalinTest.test { app, http ->
         app.get("/hello") { it.render("test.st",model("message","ST4!")) }
-        assertThat(http.get("/hello").body?.string()).isEqualTo("<h1>Hello ST4!</h1>\n")
+        assertThat(http.get("/hello").body?.string()).contains("<h1>Hello ST4!</h1>")
     }
 
     @Test
     fun `stringtemplate4 embeded works`() = JavalinTest.test { app, http ->
         app.get("/hello") { it.render("withImport.st",model("message","ST4Import!")) }
-        assertThat(http.get("/hello").body?.string()).isEqualTo("<h1>Hello ST4Import!</h1>\n\n")
+        assertThat(http.get("/hello").body?.string()).contains("<h1>Hello ST4Import!</h1>")
     }
 
     @Test
