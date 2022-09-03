@@ -6,7 +6,7 @@
 
 package io.javalin.plugin.rendering
 
-import io.javalin.core.util.OptionalDependency
+import io.javalin.util.OptionalDependency;
 
 enum class RenderingDependency(
     override val displayName: String,
@@ -23,4 +23,5 @@ enum class RenderingDependency(
     MUSTACHE("Mustache", "com.github.mustachejava.MustacheFactory", "com.github.spullara.mustache.java", "compiler", "0.9.7"),
     PEBBLE("Pebble", "com.mitchellbosecke.pebble.PebbleEngine", "io.pebbletemplates", "pebble", "3.1.5"),
     COMMONMARK("Commonmark", "org.commonmark.renderer.html.HtmlRenderer", "org.commonmark", "commonmark", "0.17.1"),
+    STRING_TEMPLATE_4("StringTemplate4", "org.stringtemplate.v4.ST;","org.antlr","ST4","4.3.4"),
 }

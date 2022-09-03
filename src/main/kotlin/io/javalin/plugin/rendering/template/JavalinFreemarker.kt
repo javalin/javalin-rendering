@@ -8,11 +8,12 @@ package io.javalin.plugin.rendering.template
 
 import freemarker.template.Configuration
 import freemarker.template.Version
-import io.javalin.core.util.DependencyUtil
 import io.javalin.http.Context
-import io.javalin.plugin.rendering.FileRenderer
-import io.javalin.plugin.rendering.JavalinRenderer
+
 import io.javalin.plugin.rendering.RenderingDependency
+import io.javalin.rendering.FileRenderer
+import io.javalin.rendering.JavalinRenderer
+import io.javalin.util.DependencyUtil
 import java.io.StringWriter
 
 object JavalinFreemarker : FileRenderer {

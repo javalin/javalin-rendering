@@ -8,11 +8,11 @@ package io.javalin.plugin.rendering.template
 
 import com.mitchellbosecke.pebble.PebbleEngine
 import com.mitchellbosecke.pebble.loader.ClasspathLoader
-import io.javalin.core.util.DependencyUtil
+import io.javalin.util.DependencyUtil
 import io.javalin.http.Context
-import io.javalin.plugin.rendering.FileRenderer
-import io.javalin.plugin.rendering.JavalinRenderer
 import io.javalin.plugin.rendering.RenderingDependency
+import io.javalin.rendering.FileRenderer
+import io.javalin.rendering.JavalinRenderer
 import java.io.StringWriter
 
 object JavalinPebble : FileRenderer {
