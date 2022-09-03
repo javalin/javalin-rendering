@@ -41,7 +41,7 @@ class TestTemplates {
             JavalinPebble.init()
             JavalinThymeleaf.init()
             JavalinVelocity.init()
-            JavalinStringTemplate4.init({ it.verbose(true) })
+            JavalinStringTemplate4.init { it.verbose(true) }
         }
     }
 
