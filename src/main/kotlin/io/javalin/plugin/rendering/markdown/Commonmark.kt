@@ -6,11 +6,12 @@
 
 package io.javalin.plugin.rendering.markdown
 
-import io.javalin.core.util.DependencyUtil
 import io.javalin.http.Context
-import io.javalin.plugin.rendering.FileRenderer
-import io.javalin.plugin.rendering.JavalinRenderer
+
 import io.javalin.plugin.rendering.RenderingDependency
+import io.javalin.rendering.FileRenderer
+import io.javalin.rendering.JavalinRenderer
+import io.javalin.util.DependencyUtil
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 

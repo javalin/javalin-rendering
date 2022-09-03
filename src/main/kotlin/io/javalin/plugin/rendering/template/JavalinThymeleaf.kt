@@ -6,11 +6,12 @@
 
 package io.javalin.plugin.rendering.template
 
-import io.javalin.core.util.DependencyUtil
+import io.javalin.util.DependencyUtil
 import io.javalin.http.Context
-import io.javalin.plugin.rendering.FileRenderer
-import io.javalin.plugin.rendering.JavalinRenderer
+
 import io.javalin.plugin.rendering.RenderingDependency
+import io.javalin.rendering.FileRenderer
+import io.javalin.rendering.JavalinRenderer
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.WebContext
 import org.thymeleaf.templatemode.TemplateMode
@@ -35,8 +36,8 @@ object JavalinThymeleaf : FileRenderer {
         DependencyUtil.ensurePresence(RenderingDependency.THYMELEAF)
         // ctx.req.servletContext that is passed to buildApplication has to match ctx.req.servletContext passed into
         // buildExchange. (application.servletContext === ctx.req.servletContext)
-        val application = JakartaServletWebApplication.buildApplication(ctx.req.servletContext)
-        val webExchange = application.buildExchange(ctx.req, ctx.res)
+        val application = JakartaServletWebApplication.buildApplication(ctx.req().servletContext)
+        val webExchange = application.buildExchange(ctx.req(), ctx.res())
         val context = WebContext(webExchange, webExchange.locale, model)
         return (templateEngine ?: defaultTemplateEngine).process(filePath, context)
     }

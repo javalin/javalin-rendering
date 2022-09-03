@@ -13,10 +13,10 @@ import gg.jte.ContentType
 import gg.jte.TemplateEngine
 import io.javalin.jte.JteTestPage
 import io.javalin.jte.PrecompileJteTestClasses
-import io.javalin.plugin.rendering.JavalinRenderer
 import io.javalin.plugin.rendering.markdown.JavalinCommonmark
 import io.javalin.plugin.rendering.template.*
 import io.javalin.plugin.rendering.template.TemplateUtil.model
+import io.javalin.rendering.JavalinRenderer
 import io.javalin.testtools.JavalinTest
 import org.apache.velocity.app.VelocityEngine
 import org.assertj.core.api.Assertions.assertThat
@@ -36,6 +36,7 @@ class TestTemplates {
             JavalinPebble.init()
             JavalinThymeleaf.init()
             JavalinVelocity.init()
+            JavalinStringTemplate4.init({it.verbose(true)})
         }
     }
 
@@ -110,7 +111,7 @@ class TestTemplates {
                 .strictVariables(true)
                 .build()
         )
-        assertThat(http.get("/hello").body?.string()).isEqualTo("Internal server error")
+        assertThat(http.get("/hello").body?.string()).isEqualTo("Server Error")
     }
 
     @Test
@@ -148,9 +149,21 @@ class TestTemplates {
     }
 
     @Test
+    fun `stringtemplate4 works`() = JavalinTest.test { app, http ->
+        app.get("/hello") { it.render("test.st",model("message","ST4!")) }
+        assertThat(http.get("/hello").body?.string()).contains("<h1>Hello ST4!</h1>")
+    }
+
+    @Test
+    fun `stringtemplate4 embeded works`() = JavalinTest.test { app, http ->
+        app.get("/hello") { it.render("withImport.st",model("message","ST4Import!")) }
+        assertThat(http.get("/hello").body?.string()).contains("<h1>Hello ST4Import!</h1>")
+    }
+
+    @Test
     fun `unregistered extension throws exception`() = JavalinTest.test { app, http ->
         app.get("/hello") { it.render("/markdown/test.unknown") }
-        assertThat(http.get("/hello").body?.string()).isEqualTo("Internal server error")
+        assertThat(http.get("/hello").body?.string()).isEqualTo("Server Error")
     }
 
     @Test

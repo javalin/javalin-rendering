@@ -6,11 +6,12 @@
 
 package io.javalin.plugin.rendering.template
 
-import io.javalin.core.util.DependencyUtil
+import io.javalin.util.DependencyUtil
 import io.javalin.http.Context
-import io.javalin.plugin.rendering.FileRenderer
-import io.javalin.plugin.rendering.JavalinRenderer
+
 import io.javalin.plugin.rendering.RenderingDependency
+import io.javalin.rendering.FileRenderer
+import io.javalin.rendering.JavalinRenderer
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
 import java.io.StringWriter
