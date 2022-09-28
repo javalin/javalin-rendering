@@ -17,20 +17,7 @@ import org.thymeleaf.templatemode.TemplateMode
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import org.thymeleaf.web.servlet.JakartaServletWebApplication
 
-object JavalinThymeleaf : FileRenderer {
-
-    fun init() {
-        Util.throwIfNotAvailable(RenderingDependency.THYMELEAF)
-        JavalinRenderer.register(JavalinThymeleaf, ".html", ".tl", ".thyme", ".thymeleaf")
-    }
-
-    private var templateEngine: TemplateEngine? = null
-    private val defaultTemplateEngine: TemplateEngine by lazy { defaultThymeLeafEngine() }
-
-    @JvmStatic
-    fun configure(staticTemplateEngine: TemplateEngine) {
-        templateEngine = staticTemplateEngine
-    }
+class JavalinThymeleaf(private var templateEngine: TemplateEngine) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
         // ctx.req.servletContext that is passed to buildApplication has to match ctx.req.servletContext passed into
@@ -38,13 +25,21 @@ object JavalinThymeleaf : FileRenderer {
         val application = JakartaServletWebApplication.buildApplication(ctx.req().servletContext)
         val webExchange = application.buildExchange(ctx.req(), ctx.res())
         val context = WebContext(webExchange, webExchange.locale, model)
-        return (templateEngine ?: defaultTemplateEngine).process(filePath, context)
+        return templateEngine.process(filePath, context)
     }
 
-    private fun defaultThymeLeafEngine() = TemplateEngine().apply {
-        setTemplateResolver(ClassLoaderTemplateResolver().apply {
-            templateMode = TemplateMode.HTML
-        })
+    companion object {
+        @JvmStatic
+        fun init(templateEngine: TemplateEngine? = null) {
+            Util.throwIfNotAvailable(RenderingDependency.THYMELEAF)
+            JavalinRenderer.register(JavalinThymeleaf(templateEngine ?: defaultThymeLeafEngine()), ".html", ".tl", ".thyme", ".thymeleaf")
+        }
+
+        private fun defaultThymeLeafEngine() = TemplateEngine().apply {
+            setTemplateResolver(ClassLoaderTemplateResolver().apply {
+                templateMode = TemplateMode.HTML
+            })
+        }
     }
 
 }

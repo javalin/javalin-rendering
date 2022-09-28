@@ -15,31 +15,26 @@ import io.javalin.rendering.util.RenderingDependency
 import io.javalin.rendering.util.Util
 import java.io.StringWriter
 
-object JavalinPebble : FileRenderer {
-
-    fun init() {
-        Util.throwIfNotAvailable(RenderingDependency.PEBBLE)
-        JavalinRenderer.register(JavalinPebble, ".peb", ".pebble")
-    }
-
-    private var pebbleEngine: PebbleEngine? = null
-    private val defaultPebbleEngine: PebbleEngine by lazy { defaultPebbleEngine() }
-
-    @JvmStatic
-    fun configure(staticPebbleEngine: PebbleEngine) {
-        pebbleEngine = staticPebbleEngine
-    }
+class JavalinPebble(private var pebbleEngine: PebbleEngine) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
-        val compiledTemplate = (pebbleEngine ?: defaultPebbleEngine).getTemplate(filePath)
+        val compiledTemplate = pebbleEngine.getTemplate(filePath)
         val stringWriter = StringWriter()
         compiledTemplate.evaluate(stringWriter, model)
         return stringWriter.toString()
     }
 
-    private fun defaultPebbleEngine() = PebbleEngine.Builder()
-        .loader(ClasspathLoader())
-        .strictVariables(false)
-        .build()
+    companion object {
+        @JvmStatic
+        fun init(pebbleEngine: PebbleEngine? = null) {
+            Util.throwIfNotAvailable(RenderingDependency.PEBBLE)
+            JavalinRenderer.register(JavalinPebble(pebbleEngine ?: defaultPebbleEngine()), ".peb", ".pebble")
+        }
+
+        private fun defaultPebbleEngine() = PebbleEngine.Builder()
+            .loader(ClasspathLoader())
+            .strictVariables(false)
+            .build()
+    }
 
 }

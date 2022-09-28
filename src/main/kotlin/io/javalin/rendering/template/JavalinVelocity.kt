@@ -16,32 +16,27 @@ import org.apache.velocity.app.VelocityEngine
 import java.io.StringWriter
 import java.nio.charset.StandardCharsets
 
-object JavalinVelocity : FileRenderer {
-
-    fun init() {
-        Util.throwIfNotAvailable(RenderingDependency.VELOCITY)
-        JavalinRenderer.register(JavalinVelocity, ".vm", ".vtl")
-    }
-
-    private var velocityEngine: VelocityEngine? = null
-    private val defaultVelocityEngine: VelocityEngine by lazy { defaultVelocityEngine() }
-
-    @JvmStatic
-    fun configure(staticVelocityEngine: VelocityEngine) {
-        velocityEngine = staticVelocityEngine
-    }
+class JavalinVelocity(private var velocityEngine: VelocityEngine) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
         val stringWriter = StringWriter()
-        (velocityEngine ?: defaultVelocityEngine).getTemplate(filePath, StandardCharsets.UTF_8.name()).merge(
+        velocityEngine.getTemplate(filePath, StandardCharsets.UTF_8.name()).merge(
             VelocityContext(model.toMutableMap()), stringWriter
         )
         return stringWriter.toString()
     }
 
-    fun defaultVelocityEngine() = VelocityEngine().apply {
-        setProperty("resource.loaders", "class")
-        setProperty("resource.loader.class.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader")
+    companion object {
+        @JvmStatic
+        fun init(velocityEngine: VelocityEngine? = null) {
+            Util.throwIfNotAvailable(RenderingDependency.VELOCITY)
+            JavalinRenderer.register(JavalinVelocity(velocityEngine ?: defaultVelocityEngine()), ".vm", ".vtl")
+        }
+
+        fun defaultVelocityEngine() = VelocityEngine().apply {
+            setProperty("resource.loaders", "class")
+            setProperty("resource.loader.class.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader")
+        }
     }
 
 }

@@ -14,32 +14,26 @@ import io.javalin.rendering.util.Util
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 
-object JavalinCommonmark : FileRenderer {
-
-    fun init() {
-        Util.throwIfNotAvailable(RenderingDependency.COMMONMARK)
-        JavalinRenderer.register(JavalinCommonmark, ".md", ".markdown")
-    }
-
-    private var renderer: HtmlRenderer? = null
-    private val defaultRenderer: HtmlRenderer by lazy {
-        HtmlRenderer.builder().build()
-    }
-
-    private var parser: Parser? = null
-    private val defaultParser: Parser by lazy {
-        Parser.builder().build()
-    }
-
-    @JvmStatic
-    fun configure(staticHtmlRenderer: HtmlRenderer, staticMarkdownParser: Parser) {
-        renderer = staticHtmlRenderer
-        parser = staticMarkdownParser
-    }
+class JavalinCommonmark(
+    private var renderer: HtmlRenderer,
+    private var parser: Parser
+) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
         val fileContent = JavalinCommonmark::class.java.getResource(filePath).readText()
-        return (renderer ?: defaultRenderer).render((parser ?: defaultParser).parse(fileContent))
+        return renderer.render(parser.parse(fileContent))
+    }
+
+    companion object {
+        @JvmStatic
+        fun init(htmlRenderer: HtmlRenderer? = null, parser: Parser? = null) {
+            Util.throwIfNotAvailable(RenderingDependency.COMMONMARK)
+            val fileRenderer = JavalinCommonmark(htmlRenderer ?: defaultRenderer(), parser ?: defaultParser())
+            JavalinRenderer.register(fileRenderer, ".md", ".markdown")
+        }
+
+        fun defaultRenderer(): HtmlRenderer = HtmlRenderer.builder().build()
+        fun defaultParser(): Parser = Parser.builder().build()
     }
 
 }

@@ -18,34 +18,30 @@ import io.javalin.rendering.util.RenderingDependency
 import io.javalin.rendering.util.Util
 import java.io.File
 
-object JavalinJte : FileRenderer {
-
-    fun init() {
-        Util.throwIfNotAvailable(RenderingDependency.JTE)
-        Util.throwIfNotAvailable(RenderingDependency.JTE_KOTLIN)
-        JavalinRenderer.register(JavalinJte, ".jte", ".kte")
-    }
+class JavalinJte(
+    private val templateEngine: TemplateEngine,
+    private val isDevFunction: (Context) -> Boolean = { it.isLocalhost() }
+) : FileRenderer {
 
     private var isDev: Boolean? = null // cached and easily accessible, is set on first request (can't be configured directly by end user)
-
-    @JvmField
-    var isDevFunction: (Context) -> Boolean = { it.isLocalhost() } // used to set isDev, will be called once
-
-    private var templateEngine: TemplateEngine? = null
-    private val defaultTemplateEngine: TemplateEngine by lazy { defaultJteEngine() }
-
-    @JvmStatic
-    fun configure(staticTemplateEngine: TemplateEngine) {
-        templateEngine = staticTemplateEngine
-    }
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
         isDev = isDev ?: isDevFunction(ctx)
         val stringOutput = StringOutput()
-        (templateEngine ?: defaultTemplateEngine).render(filePath, model, stringOutput)
+        templateEngine.render(filePath, model, stringOutput)
         return stringOutput.toString()
     }
 
-    private fun defaultJteEngine() = TemplateEngine.create(DirectoryCodeResolver(File("src/main/jte").toPath()), ContentType.Html)
+    companion object {
+        @JvmStatic
+        fun init(templateEngine: TemplateEngine? = null, isDevFunction: (Context) -> Boolean = { false }) {
+            Util.throwIfNotAvailable(RenderingDependency.JTE)
+            Util.throwIfNotAvailable(RenderingDependency.JTE_KOTLIN)
+            val fileRenderer = JavalinJte(templateEngine ?: defaultJteEngine(), isDevFunction)
+            JavalinRenderer.register(fileRenderer, ".jte", ".kte")
+        }
+
+        private fun defaultJteEngine() = TemplateEngine.create(DirectoryCodeResolver(File("src/main/jte").toPath()), ContentType.Html)
+    }
 
 }

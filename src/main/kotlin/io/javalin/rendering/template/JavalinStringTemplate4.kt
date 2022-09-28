@@ -49,6 +49,8 @@ class JavalinStringTemplate4 : FileRenderer {
         private const val defaultModelAccessor = "m"
         private var modelAccessor = "m"
         private var group: STRawGroupDir? = null
+
+        @JvmStatic
         fun init(consumer: Consumer<JavalinStringTemplate4Configuration>) {
             throwIfNotAvailable(RenderingDependency.STRING_TEMPLATE_4)
             register(JavalinStringTemplate4(), ".st", ".html.st")

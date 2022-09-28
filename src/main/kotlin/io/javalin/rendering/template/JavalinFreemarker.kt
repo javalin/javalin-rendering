@@ -15,29 +15,25 @@ import io.javalin.rendering.util.RenderingDependency
 import io.javalin.rendering.util.Util
 import java.io.StringWriter
 
-object JavalinFreemarker : FileRenderer {
-
-    fun init() {
-        Util.throwIfNotAvailable(RenderingDependency.FREEMARKER)
-        JavalinRenderer.register(JavalinFreemarker, ".ftl")
-    }
-
-    private var configuration: Configuration? = null
-    private val defaultConfiguration: Configuration by lazy { defaultFreemarkerEngine() }
-
-    @JvmStatic
-    fun configure(staticConfiguration: Configuration) {
-        configuration = staticConfiguration
-    }
+class JavalinFreemarker(private val configuration: Configuration) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
         val stringWriter = StringWriter()
-        (configuration ?: defaultConfiguration).getTemplate(filePath).process(model, stringWriter)
+        configuration.getTemplate(filePath).process(model, stringWriter)
         return stringWriter.toString()
     }
 
-    private fun defaultFreemarkerEngine() = Configuration(Version(2, 3, 26)).apply {
-        setClassForTemplateLoading(JavalinFreemarker::class.java, "/")
+    companion object {
+        @JvmStatic
+        fun init(configuration: Configuration? = null) {
+            Util.throwIfNotAvailable(RenderingDependency.FREEMARKER)
+            val fileRenderer = JavalinFreemarker(configuration ?: defaultFreemarkerEngine())
+            JavalinRenderer.register(fileRenderer, ".ftl")
+        }
+
+        fun defaultFreemarkerEngine() = Configuration(Version(2, 3, 26)).apply {
+            setClassForTemplateLoading(JavalinFreemarker::class.java, "/")
+        }
     }
 
 }

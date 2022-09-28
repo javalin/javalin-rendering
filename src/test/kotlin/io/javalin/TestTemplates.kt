@@ -49,21 +49,21 @@ class TestTemplates {
 
     @Test
     fun `velocity templates work`() = JavalinTest.test { app, http ->
-        JavalinVelocity.configure(JavalinVelocity.defaultVelocityEngine())
+        JavalinVelocity.init(JavalinVelocity.defaultVelocityEngine())
         app.get("/hello") { it.render("/templates/velocity/test.vm", mapOf("message" to "Hello Velocity!")) }
         assertThat(http.get("/hello").body?.string()).isEqualTo("<h1>Hello Velocity!</h1>")
     }
 
     @Test
     fun `velocity template variables work`() = JavalinTest.test { app, http ->
-        JavalinVelocity.configure(JavalinVelocity.defaultVelocityEngine())
+        JavalinVelocity.init(JavalinVelocity.defaultVelocityEngine())
         app.get("/hello") { it.render("/templates/velocity/test-set.vm") }
         assertThat(http.get("/hello").body?.string()).isEqualTo("<h1>Set works</h1>")
     }
 
     @Test
     fun `velocity external templates work`() = JavalinTest.test { app, http ->
-        JavalinVelocity.configure(VelocityEngine().apply {
+        JavalinVelocity.init(VelocityEngine().apply {
             setProperty("resource.loader.file.path", "src/test/resources/templates/velocity")
         })
         app.get("/hello") { it.render("test.vm") }
@@ -110,7 +110,7 @@ class TestTemplates {
     fun `pebble custom engines work`() = JavalinTest.test { app, http ->
         app.get("/hello") { it.render("templates/pebble/test.peb") }
         assertThat(http.get("/hello").body?.string()).isEqualTo("<h1></h1>")
-        JavalinPebble.configure(
+        JavalinPebble.init(
             PebbleEngine.Builder()
                 .loader(ClasspathLoader())
                 .strictVariables(true)
@@ -121,28 +121,28 @@ class TestTemplates {
 
     @Test
     fun `jte works`() = JavalinTest.test { app, http ->
-        JavalinJte.configure(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
+        JavalinJte.init(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
         app.get("/hello") { it.render("test.jte", mapOf("page" to JteTestPage("hello", "world"))) }
         assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
     @Test
     fun `jte multiple params work`() = JavalinTest.test { app, http ->
-        JavalinJte.configure(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
+        JavalinJte.init(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
         app.get("/hello") { it.render("multiple-params.jte", mapOf("one" to "hello", "two" to "world")) }
         assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
     @Test
     fun `jte kotlin works`() = JavalinTest.test { app, http ->
-        JavalinJte.configure(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
+        JavalinJte.init(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
         app.get("/hello") { it.render("kte/test.kte", mapOf("page" to JteTestPage("hello", "world"))) }
         assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
     @Test
     fun `jte kotlin multiple params work`() = JavalinTest.test { app, http ->
-        JavalinJte.configure(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
+        JavalinJte.init(TemplateEngine.createPrecompiled(null, ContentType.Html, null, PrecompileJteTestClasses.PACKAGE_NAME))
         app.get("/hello") { it.render("kte/multiple-params.kte", mapOf("one" to "hello", "two" to "world")) }
         assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }

@@ -15,25 +15,22 @@ import io.javalin.rendering.util.RenderingDependency
 import io.javalin.rendering.util.Util
 import java.io.StringWriter
 
-object JavalinMustache : FileRenderer {
-
-    fun init() {
-        Util.throwIfNotAvailable(RenderingDependency.MUSTACHE)
-        JavalinRenderer.register(JavalinMustache, ".mustache")
-    }
-
-    private var mustacheFactory: MustacheFactory? = null
-    private val defaultMustacheFactory: MustacheFactory by lazy { DefaultMustacheFactory("./") }
-
-    @JvmStatic
-    fun configure(staticMustacheFactory: MustacheFactory) {
-        mustacheFactory = staticMustacheFactory
-    }
+class JavalinMustache(private var mustacheFactory: MustacheFactory) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
         val stringWriter = StringWriter()
-        (mustacheFactory ?: defaultMustacheFactory).compile(filePath).execute(stringWriter, model).close()
+        mustacheFactory.compile(filePath).execute(stringWriter, model).close()
         return stringWriter.toString()
+    }
+
+    companion object {
+        @JvmStatic
+        fun init(mustacheFactory: MustacheFactory? = null) {
+            Util.throwIfNotAvailable(RenderingDependency.MUSTACHE)
+            JavalinRenderer.register(JavalinMustache(mustacheFactory ?: defaultMustacheFactory()), ".mustache")
+        }
+
+        fun defaultMustacheFactory(): MustacheFactory = DefaultMustacheFactory("./")
     }
 
 }
