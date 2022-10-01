@@ -65,7 +65,7 @@
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
-            <version>5.0.0.RC2</version>
+            <version>5.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -95,7 +95,7 @@
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin-testtools</artifactId>
-            <version>5.0.0.RC2</version>
+            <version>5.0.0</version>
             <scope>test</scope>
         </dependency>
 
