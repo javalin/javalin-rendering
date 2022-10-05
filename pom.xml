@@ -11,7 +11,7 @@
 
     <groupId>io.javalin</groupId>
     <artifactId>javalin-rendering</artifactId>
-    <version>5.0.1-SNAPSHOT</version>
+    <version>5.0.1</version>
 
     <name>javalin-rendering</name>
     <description>Rendering engines for Javalin</description>
@@ -28,7 +28,7 @@
         <connection>scm:git:git@github.com:javalin/javalin-rendering.git</connection>
         <developerConnection>scm:git:git@github.com:javalin/javalin-rendering.git</developerConnection>
         <url>https://github.com/javalin/javalin-rendering.git</url>
-        <tag>HEAD</tag>
+        <tag>javalin-rendering-5.0.1</tag>
     </scm>
     <developers>
         <developer>
