@@ -20,7 +20,7 @@ import java.io.File
 
 class JavalinJte(
     private val templateEngine: TemplateEngine,
-    private val isDevFunction: (Context) -> Boolean = { it.isLocalhost() }
+    private val isDevFunction: (Context) -> Boolean
 ) : FileRenderer {
 
     private var isDev: Boolean? = null // cached and easily accessible, is set on first request (can't be configured directly by end user)
@@ -34,10 +34,11 @@ class JavalinJte(
 
     companion object {
         @JvmStatic
-        fun init(templateEngine: TemplateEngine? = null, isDevFunction: (Context) -> Boolean = { false }) {
+        @JvmOverloads
+        fun init(templateEngine: TemplateEngine? = null, isDevFunction: ((Context) -> Boolean)? = null) {
             Util.throwIfNotAvailable(RenderingDependency.JTE)
             Util.throwIfNotAvailable(RenderingDependency.JTE_KOTLIN)
-            val fileRenderer = JavalinJte(templateEngine ?: defaultJteEngine(), isDevFunction)
+            val fileRenderer = JavalinJte(templateEngine ?: defaultJteEngine(), isDevFunction ?: { it.isLocalhost() })
             JavalinRenderer.register(fileRenderer, ".jte", ".kte")
         }
 

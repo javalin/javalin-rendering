@@ -26,6 +26,7 @@ class JavalinCommonmark(
 
     companion object {
         @JvmStatic
+        @JvmOverloads
         fun init(htmlRenderer: HtmlRenderer? = null, parser: Parser? = null) {
             Util.throwIfNotAvailable(RenderingDependency.COMMONMARK)
             val fileRenderer = JavalinCommonmark(htmlRenderer ?: defaultRenderer(), parser ?: defaultParser())
