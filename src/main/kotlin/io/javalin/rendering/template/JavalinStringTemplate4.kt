@@ -51,6 +51,7 @@ class JavalinStringTemplate4 : FileRenderer {
         private var group: STRawGroupDir? = null
 
         @JvmStatic
+        @JvmOverloads
         fun init(consumer: Consumer<JavalinStringTemplate4Configuration>) {
             throwIfNotAvailable(RenderingDependency.STRING_TEMPLATE_4)
             register(JavalinStringTemplate4(), ".st", ".html.st")

@@ -30,6 +30,7 @@ class JavalinThymeleaf(private var templateEngine: TemplateEngine) : FileRendere
 
     companion object {
         @JvmStatic
+        @JvmOverloads
         fun init(templateEngine: TemplateEngine? = null) {
             Util.throwIfNotAvailable(RenderingDependency.THYMELEAF)
             JavalinRenderer.register(JavalinThymeleaf(templateEngine ?: defaultThymeLeafEngine()), ".html", ".tl", ".thyme", ".thymeleaf")

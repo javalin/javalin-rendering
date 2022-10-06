@@ -25,6 +25,7 @@ class JavalinMustache(private var mustacheFactory: MustacheFactory) : FileRender
 
     companion object {
         @JvmStatic
+        @JvmOverloads
         fun init(mustacheFactory: MustacheFactory? = null) {
             Util.throwIfNotAvailable(RenderingDependency.MUSTACHE)
             JavalinRenderer.register(JavalinMustache(mustacheFactory ?: defaultMustacheFactory()), ".mustache")

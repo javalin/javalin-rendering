@@ -26,6 +26,7 @@ class JavalinPebble(private var pebbleEngine: PebbleEngine) : FileRenderer {
 
     companion object {
         @JvmStatic
+        @JvmOverloads
         fun init(pebbleEngine: PebbleEngine? = null) {
             Util.throwIfNotAvailable(RenderingDependency.PEBBLE)
             JavalinRenderer.register(JavalinPebble(pebbleEngine ?: defaultPebbleEngine()), ".peb", ".pebble")

@@ -28,6 +28,7 @@ class JavalinVelocity(private var velocityEngine: VelocityEngine) : FileRenderer
 
     companion object {
         @JvmStatic
+        @JvmOverloads
         fun init(velocityEngine: VelocityEngine? = null) {
             Util.throwIfNotAvailable(RenderingDependency.VELOCITY)
             JavalinRenderer.register(JavalinVelocity(velocityEngine ?: defaultVelocityEngine()), ".vm", ".vtl")

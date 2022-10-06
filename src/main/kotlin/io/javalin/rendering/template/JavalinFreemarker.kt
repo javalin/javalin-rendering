@@ -25,6 +25,7 @@ class JavalinFreemarker(private val configuration: Configuration) : FileRenderer
 
     companion object {
         @JvmStatic
+        @JvmOverloads
         fun init(configuration: Configuration? = null) {
             Util.throwIfNotAvailable(RenderingDependency.FREEMARKER)
             val fileRenderer = JavalinFreemarker(configuration ?: defaultFreemarkerEngine())
