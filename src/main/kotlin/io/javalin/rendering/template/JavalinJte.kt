@@ -26,6 +26,9 @@ class JavalinJte(
     private var isDev: Boolean? = null // cached and easily accessible, is set on first request (can't be configured directly by end user)
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
+        if (isDev == true && filePath.endsWith(".kte")) {
+            Util.throwIfNotAvailable(RenderingDependency.JTE_KOTLIN)
+        }
         isDev = isDev ?: isDevFunction(ctx)
         val stringOutput = StringOutput()
         templateEngine.render(filePath, model, stringOutput)
@@ -37,7 +40,6 @@ class JavalinJte(
         @JvmOverloads
         fun init(templateEngine: TemplateEngine? = null, isDevFunction: ((Context) -> Boolean)? = null) {
             Util.throwIfNotAvailable(RenderingDependency.JTE)
-            Util.throwIfNotAvailable(RenderingDependency.JTE_KOTLIN)
             val fileRenderer = JavalinJte(templateEngine ?: defaultJteEngine(), isDevFunction ?: { it.isLocalhost() })
             JavalinRenderer.register(fileRenderer, ".jte", ".kte")
         }
