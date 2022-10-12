@@ -14,9 +14,9 @@ import io.javalin.rendering.util.Util
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 
-class JavalinCommonmark(
-    private var renderer: HtmlRenderer,
-    private var parser: Parser
+class JavalinCommonmark @JvmOverloads constructor(
+    private var renderer: HtmlRenderer = defaultRenderer(),
+    private var parser: Parser = defaultParser()
 ) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
