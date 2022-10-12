@@ -18,9 +18,9 @@ import io.javalin.rendering.util.RenderingDependency
 import io.javalin.rendering.util.Util
 import java.io.File
 
-class JavalinJte(
-    private val templateEngine: TemplateEngine,
-    private val isDevFunction: (Context) -> Boolean
+class JavalinJte @JvmOverloads constructor(
+    private val templateEngine: TemplateEngine = defaultJteEngine(),
+    private val isDevFunction: (Context) -> Boolean = { ctx -> ctx.isLocalhost() }
 ) : FileRenderer {
 
     private var isDev: Boolean? = null // cached and easily accessible, is set on first request (can't be configured directly by end user)
