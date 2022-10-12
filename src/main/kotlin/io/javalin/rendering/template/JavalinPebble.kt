@@ -15,7 +15,9 @@ import io.javalin.rendering.util.RenderingDependency
 import io.javalin.rendering.util.Util
 import java.io.StringWriter
 
-class JavalinPebble(private var pebbleEngine: PebbleEngine) : FileRenderer {
+class JavalinPebble @JvmOverloads constructor(
+    private var pebbleEngine: PebbleEngine = defaultPebbleEngine()
+) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
         val compiledTemplate = pebbleEngine.getTemplate(filePath)

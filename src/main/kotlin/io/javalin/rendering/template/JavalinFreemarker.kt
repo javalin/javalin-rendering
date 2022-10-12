@@ -15,7 +15,9 @@ import io.javalin.rendering.util.RenderingDependency
 import io.javalin.rendering.util.Util
 import java.io.StringWriter
 
-class JavalinFreemarker(private val configuration: Configuration) : FileRenderer {
+class JavalinFreemarker @JvmOverloads constructor(
+    private val configuration: Configuration = defaultFreemarkerEngine()
+) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
         val stringWriter = StringWriter()

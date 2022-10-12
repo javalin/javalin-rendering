@@ -16,7 +16,9 @@ import org.apache.velocity.app.VelocityEngine
 import java.io.StringWriter
 import java.nio.charset.StandardCharsets
 
-class JavalinVelocity(private var velocityEngine: VelocityEngine) : FileRenderer {
+class JavalinVelocity @JvmOverloads constructor(
+    private var velocityEngine: VelocityEngine = defaultVelocityEngine()
+) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
         val stringWriter = StringWriter()

@@ -17,7 +17,9 @@ import org.thymeleaf.templatemode.TemplateMode
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import org.thymeleaf.web.servlet.JakartaServletWebApplication
 
-class JavalinThymeleaf(private var templateEngine: TemplateEngine) : FileRenderer {
+class JavalinThymeleaf @JvmOverloads constructor(
+    private var templateEngine: TemplateEngine = defaultThymeLeafEngine()
+) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
         // ctx.req.servletContext that is passed to buildApplication has to match ctx.req.servletContext passed into

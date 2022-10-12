@@ -15,7 +15,9 @@ import io.javalin.rendering.util.RenderingDependency
 import io.javalin.rendering.util.Util
 import java.io.StringWriter
 
-class JavalinMustache(private var mustacheFactory: MustacheFactory) : FileRenderer {
+class JavalinMustache @JvmOverloads constructor(
+    private var mustacheFactory: MustacheFactory = defaultMustacheFactory()
+) : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
         val stringWriter = StringWriter()
