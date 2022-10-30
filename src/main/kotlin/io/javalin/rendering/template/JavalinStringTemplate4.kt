@@ -52,11 +52,11 @@ class JavalinStringTemplate4 : FileRenderer {
 
         @JvmStatic
         @JvmOverloads
-        fun init(consumer: Consumer<JavalinStringTemplate4Configuration>) {
+        fun init(consumer: Consumer<JavalinStringTemplate4Configuration>? = null) {
             throwIfNotAvailable(RenderingDependency.STRING_TEMPLATE_4)
             register(JavalinStringTemplate4(), ".st", ".html.st")
             val config = JavalinStringTemplate4Configuration()
-            consumer.accept(config)
+            consumer?.accept(config)
             STGroup.verbose = config.verbose
             group = STRawGroupDir(config.templateDir, "UTF-8", config.delimiter, config.delimiter)
             group!!.load()
