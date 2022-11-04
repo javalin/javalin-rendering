@@ -1,1 +1,1 @@
-<h1>Hello $m.message$</h1>
+<h1>Hello $message$</h1>

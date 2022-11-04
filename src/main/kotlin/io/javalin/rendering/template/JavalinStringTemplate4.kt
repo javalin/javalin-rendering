@@ -12,8 +12,12 @@ import java.util.function.Consumer
 class JavalinStringTemplate4 : FileRenderer {
 
     override fun render(filePath: String, model: Map<String, Any>, context: Context): String {
+        if(reloadOnRender){
+            group!!.unload()
+            group!!.load()
+        }
         val template = group!!.getInstanceOf(cleanFilePath(filePath))
-        template.add(modelAccessor, model)
+        model.forEach(template::add)
         return template.render()
     }
 
@@ -23,44 +27,42 @@ class JavalinStringTemplate4 : FileRenderer {
 
     class JavalinStringTemplate4Configuration {
         var templateDir = defaultTemplateDir
-        var modelAccessor = defaultModelAccessor
+        var devMode = false;
         var delimiter = defaultDelimiter
-        var verbose = false
+
         fun templateDir(templateDir: String) {
             this.templateDir = templateDir
         }
 
-        fun modelAccessor(modelAccessor: String) {
-            this.modelAccessor = modelAccessor
+        fun devMode(devMode: Boolean){
+            this.devMode = devMode;
         }
-
         fun delimiter(delimiter: Char) {
             this.delimiter = delimiter
         }
 
-        fun verbose(verbose: Boolean) {
-            this.verbose = verbose
-        }
+
     }
 
     companion object {
         private const val defaultDelimiter = '$'
         private const val defaultTemplateDir = "templates/st"
-        private const val defaultModelAccessor = "m"
-        private var modelAccessor = "m"
+        private var reloadOnRender = false
+        private var verbose = false
         private var group: STRawGroupDir? = null
 
         @JvmStatic
         @JvmOverloads
         fun init(consumer: Consumer<JavalinStringTemplate4Configuration>? = null) {
             throwIfNotAvailable(RenderingDependency.STRING_TEMPLATE_4)
-            register(JavalinStringTemplate4(), ".st", ".html.st")
+            register(JavalinStringTemplate4(), ".st")
             val config = JavalinStringTemplate4Configuration()
             consumer?.accept(config)
-            STGroup.verbose = config.verbose
+            verbose = config.devMode
+            reloadOnRender = config.devMode
+            STGroup.verbose = verbose
             group = STRawGroupDir(config.templateDir, "UTF-8", config.delimiter, config.delimiter)
             group!!.load()
-            modelAccessor = config.modelAccessor
         }
     }
 }
