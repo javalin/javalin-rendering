@@ -2,6 +2,7 @@ package io.javalin.rendering.template
 
 import io.javalin.http.Context
 import io.javalin.rendering.FileRenderer
+import io.javalin.rendering.JavalinRenderer
 import io.javalin.rendering.JavalinRenderer.register
 import io.javalin.rendering.util.RenderingDependency
 import io.javalin.rendering.util.Util.throwIfNotAvailable
@@ -11,8 +12,8 @@ import java.util.function.Consumer
 
 class JavalinStringTemplate4 : FileRenderer {
 
-    override fun render(filePath: String, model: Map<String, Any>, context: Context): String {
-        if(reloadOnRender){
+    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
+        if (reloadOnRender) {
             group!!.unload()
             group!!.load()
         }
@@ -20,6 +21,7 @@ class JavalinStringTemplate4 : FileRenderer {
         model.forEach(template::add)
         return template.render()
     }
+
 
     private fun cleanFilePath(filePath: String): String {
         return if (filePath.endsWith(".st")) filePath.substring(0, filePath.length - 3) else filePath
@@ -34,9 +36,10 @@ class JavalinStringTemplate4 : FileRenderer {
             this.templateDir = templateDir
         }
 
-        fun devMode(devMode: Boolean){
+        fun devMode(devMode: Boolean) {
             this.devMode = devMode;
         }
+
         fun delimiter(delimiter: Char) {
             this.delimiter = delimiter
         }
@@ -51,11 +54,13 @@ class JavalinStringTemplate4 : FileRenderer {
         private var verbose = false
         private var group: STRawGroupDir? = null
 
+        val extensions = arrayOf(".st")
+
         @JvmStatic
         @JvmOverloads
         fun init(consumer: Consumer<JavalinStringTemplate4Configuration>? = null) {
             throwIfNotAvailable(RenderingDependency.STRING_TEMPLATE_4)
-            register(JavalinStringTemplate4(), ".st")
+            register(JavalinStringTemplate4(), *extensions)
             val config = JavalinStringTemplate4Configuration()
             consumer?.accept(config)
             verbose = config.devMode
@@ -65,4 +70,9 @@ class JavalinStringTemplate4 : FileRenderer {
             group!!.load()
         }
     }
+
+    class Loader : JavalinRenderer.FileRendererLoader {
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
+    }
+
 }

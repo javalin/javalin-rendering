@@ -31,11 +31,13 @@ class JavalinThymeleaf @JvmOverloads constructor(
     }
 
     companion object {
+        val extensions = arrayOf(".html", ".tl", ".thyme", ".thymeleaf")
+
         @JvmStatic
         @JvmOverloads
         fun init(templateEngine: TemplateEngine? = null) {
             Util.throwIfNotAvailable(RenderingDependency.THYMELEAF)
-            JavalinRenderer.register(JavalinThymeleaf(templateEngine ?: defaultThymeLeafEngine()), ".html", ".tl", ".thyme", ".thymeleaf")
+            JavalinRenderer.register(JavalinThymeleaf(templateEngine ?: defaultThymeLeafEngine()), *extensions)
         }
 
         private fun defaultThymeLeafEngine() = TemplateEngine().apply {
@@ -43,6 +45,10 @@ class JavalinThymeleaf @JvmOverloads constructor(
                 templateMode = TemplateMode.HTML
             })
         }
+    }
+
+    class Loader : JavalinRenderer.FileRendererLoader {
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
     }
 
 }

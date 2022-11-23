@@ -19,24 +19,30 @@ class JavalinFreemarker @JvmOverloads constructor(
     private val configuration: Configuration = defaultFreemarkerEngine()
 ) : FileRenderer {
 
-    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
+    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
         val stringWriter = StringWriter()
         configuration.getTemplate(filePath).process(model, stringWriter)
         return stringWriter.toString()
     }
 
     companion object {
+        val extensions = arrayOf(".ftl")
+
         @JvmStatic
         @JvmOverloads
         fun init(configuration: Configuration? = null) {
             Util.throwIfNotAvailable(RenderingDependency.FREEMARKER)
             val fileRenderer = JavalinFreemarker(configuration ?: defaultFreemarkerEngine())
-            JavalinRenderer.register(fileRenderer, ".ftl")
+            JavalinRenderer.register(fileRenderer, *extensions)
         }
 
         fun defaultFreemarkerEngine() = Configuration(Version(2, 3, 26)).apply {
             setClassForTemplateLoading(JavalinFreemarker::class.java, "/")
         }
+    }
+
+    class Loader : JavalinRenderer.FileRendererLoader {
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
     }
 
 }

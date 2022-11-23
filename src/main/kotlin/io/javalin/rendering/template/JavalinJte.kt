@@ -36,15 +36,21 @@ class JavalinJte @JvmOverloads constructor(
     }
 
     companion object {
+        val extensions = arrayOf(".jte", ".kte")
+
         @JvmStatic
         @JvmOverloads
         fun init(templateEngine: TemplateEngine? = null, isDevFunction: ((Context) -> Boolean)? = null) {
             Util.throwIfNotAvailable(RenderingDependency.JTE)
             val fileRenderer = JavalinJte(templateEngine ?: defaultJteEngine(), isDevFunction ?: { it.isLocalhost() })
-            JavalinRenderer.register(fileRenderer, ".jte", ".kte")
+            JavalinRenderer.register(fileRenderer, *extensions)
         }
 
         private fun defaultJteEngine() = TemplateEngine.create(DirectoryCodeResolver(File("src/main/jte").toPath()), ContentType.Html)
+    }
+
+    class Loader : JavalinRenderer.FileRendererLoader {
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
     }
 
 }
