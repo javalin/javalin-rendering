@@ -19,21 +19,27 @@ class JavalinMustache @JvmOverloads constructor(
     private var mustacheFactory: MustacheFactory = defaultMustacheFactory()
 ) : FileRenderer {
 
-    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
+    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
         val stringWriter = StringWriter()
         mustacheFactory.compile(filePath).execute(stringWriter, model).close()
         return stringWriter.toString()
     }
 
     companion object {
+        val extensions = arrayOf(".mustache")
+
         @JvmStatic
         @JvmOverloads
         fun init(mustacheFactory: MustacheFactory? = null) {
             Util.throwIfNotAvailable(RenderingDependency.MUSTACHE)
-            JavalinRenderer.register(JavalinMustache(mustacheFactory ?: defaultMustacheFactory()), ".mustache")
+            JavalinRenderer.register(JavalinMustache(mustacheFactory ?: defaultMustacheFactory()), *extensions)
         }
 
         fun defaultMustacheFactory(): MustacheFactory = DefaultMustacheFactory("./")
+    }
+
+    class Loader : JavalinRenderer.FileRendererLoader {
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
     }
 
 }

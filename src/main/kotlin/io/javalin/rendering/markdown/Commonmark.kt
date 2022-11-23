@@ -19,22 +19,28 @@ class JavalinCommonmark @JvmOverloads constructor(
     private var parser: Parser = defaultParser()
 ) : FileRenderer {
 
-    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
+    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
         val fileContent = JavalinCommonmark::class.java.getResource(filePath).readText()
         return renderer.render(parser.parse(fileContent))
     }
 
     companion object {
+        val extensions = arrayOf(".md", ".markdown")
+
         @JvmStatic
         @JvmOverloads
         fun init(htmlRenderer: HtmlRenderer? = null, parser: Parser? = null) {
             Util.throwIfNotAvailable(RenderingDependency.COMMONMARK)
             val fileRenderer = JavalinCommonmark(htmlRenderer ?: defaultRenderer(), parser ?: defaultParser())
-            JavalinRenderer.register(fileRenderer, ".md", ".markdown")
+            JavalinRenderer.register(fileRenderer, *extensions)
         }
 
         fun defaultRenderer(): HtmlRenderer = HtmlRenderer.builder().build()
         fun defaultParser(): Parser = Parser.builder().build()
+    }
+
+    class Loader : JavalinRenderer.FileRendererLoader {
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
     }
 
 }

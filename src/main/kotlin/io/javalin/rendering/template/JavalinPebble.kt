@@ -19,7 +19,7 @@ class JavalinPebble @JvmOverloads constructor(
     private var pebbleEngine: PebbleEngine = defaultPebbleEngine()
 ) : FileRenderer {
 
-    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context?): String {
+    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
         val compiledTemplate = pebbleEngine.getTemplate(filePath)
         val stringWriter = StringWriter()
         compiledTemplate.evaluate(stringWriter, model)
@@ -27,17 +27,23 @@ class JavalinPebble @JvmOverloads constructor(
     }
 
     companion object {
+        val extensions = arrayOf(".peb", ".pebble")
+
         @JvmStatic
         @JvmOverloads
         fun init(pebbleEngine: PebbleEngine? = null) {
             Util.throwIfNotAvailable(RenderingDependency.PEBBLE)
-            JavalinRenderer.register(JavalinPebble(pebbleEngine ?: defaultPebbleEngine()), ".peb", ".pebble")
+            JavalinRenderer.register(JavalinPebble(pebbleEngine ?: defaultPebbleEngine()), *extensions)
         }
 
         private fun defaultPebbleEngine() = PebbleEngine.Builder()
             .loader(ClasspathLoader())
             .strictVariables(false)
             .build()
+    }
+
+    class Loader : JavalinRenderer.FileRendererLoader {
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
     }
 
 }

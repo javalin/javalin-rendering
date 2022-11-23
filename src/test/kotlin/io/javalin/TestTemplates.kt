@@ -13,37 +13,17 @@ import gg.jte.ContentType
 import gg.jte.TemplateEngine
 import io.javalin.jte.JteTestPage
 import io.javalin.jte.PrecompileJteTestClasses
-import io.javalin.rendering.markdown.JavalinCommonmark
-import io.javalin.rendering.template.JavalinFreemarker
 import io.javalin.rendering.template.JavalinJte
-import io.javalin.rendering.template.JavalinMustache
 import io.javalin.rendering.template.JavalinPebble
-import io.javalin.rendering.template.JavalinStringTemplate4
-import io.javalin.rendering.template.JavalinThymeleaf
 import io.javalin.rendering.template.JavalinVelocity
 import io.javalin.rendering.JavalinRenderer
+import io.javalin.rendering.template.JavalinStringTemplate4
 import io.javalin.testtools.JavalinTest
 import org.apache.velocity.app.VelocityEngine
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.BeforeClass
 import org.junit.Test
 
 class TestTemplates {
-
-    companion object {
-        @JvmStatic
-        @BeforeClass
-        fun initRenderers() {
-            JavalinCommonmark.init()
-            JavalinFreemarker.init()
-            JavalinJte.init()
-            JavalinMustache.init()
-            JavalinPebble.init()
-            JavalinThymeleaf.init()
-            JavalinVelocity.init()
-            JavalinStringTemplate4.init { it.devMode(true) }
-        }
-    }
 
     private val defaultBaseModel = mapOf("foo" to "bar")
 
@@ -161,6 +141,7 @@ class TestTemplates {
 
     @Test
     fun `stringtemplate4 embeded works`() = JavalinTest.test { app, http ->
+        JavalinStringTemplate4.init { it.devMode(true) }
         app.get("/hello") { it.render("withImport.st", mapOf("message" to "ST4Import!")) }
         assertThat(http.get("/hello").body?.string()).contains("<h1>Hello ST4Import!</h1>")
     }
