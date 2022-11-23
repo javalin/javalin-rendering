@@ -48,6 +48,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <jte.version>2.2.1</jte.version>
+        <javalin.version>(5.2.0,)</javalin.version>
     </properties>
 
     <repositories>
@@ -66,7 +67,7 @@
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
-            <version>(5.0.0,)</version>
+            <version>${javalin.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -96,7 +97,7 @@
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin-testtools</artifactId>
-            <version>(5.0.0,)</version>
+            <version>${javalin.version}</version>
             <scope>test</scope>
         </dependency>
 
