@@ -11,7 +11,7 @@ import freemarker.template.Version
 import io.javalin.http.Context
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
-import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.RenderingDependency.FREEMARKER
 import io.javalin.rendering.util.Util
 import java.io.StringWriter
 
@@ -31,7 +31,7 @@ class JavalinFreemarker @JvmOverloads constructor(
         @JvmStatic
         @JvmOverloads
         fun init(configuration: Configuration? = null) {
-            Util.throwIfNotAvailable(RenderingDependency.FREEMARKER)
+            Util.throwIfNotAvailable(FREEMARKER)
             val fileRenderer = JavalinFreemarker(configuration ?: defaultFreemarkerEngine())
             JavalinRenderer.register(fileRenderer, *extensions)
         }
@@ -42,7 +42,7 @@ class JavalinFreemarker @JvmOverloads constructor(
     }
 
     class Loader : JavalinRenderer.FileRendererLoader {
-        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions) && FREEMARKER.exists()) init() else Unit
     }
 
 }

@@ -14,7 +14,8 @@ import io.javalin.http.Context
 import io.javalin.http.servlet.isLocalhost
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
-import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.RenderingDependency.JTE
+import io.javalin.rendering.util.RenderingDependency.JTE_KOTLIN
 import io.javalin.rendering.util.Util
 import java.io.File
 
@@ -27,7 +28,7 @@ class JavalinJte @JvmOverloads constructor(
 
     override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
         if (isDev == true && filePath.endsWith(".kte")) {
-            Util.throwIfNotAvailable(RenderingDependency.JTE_KOTLIN)
+            Util.throwIfNotAvailable(JTE_KOTLIN)
         }
         isDev = isDev ?: isDevFunction(ctx)
         val stringOutput = StringOutput()
@@ -41,7 +42,7 @@ class JavalinJte @JvmOverloads constructor(
         @JvmStatic
         @JvmOverloads
         fun init(templateEngine: TemplateEngine? = null, isDevFunction: ((Context) -> Boolean)? = null) {
-            Util.throwIfNotAvailable(RenderingDependency.JTE)
+            Util.throwIfNotAvailable(JTE)
             val fileRenderer = JavalinJte(templateEngine ?: defaultJteEngine(), isDevFunction ?: { it.isLocalhost() })
             JavalinRenderer.register(fileRenderer, *extensions)
         }
@@ -50,7 +51,7 @@ class JavalinJte @JvmOverloads constructor(
     }
 
     class Loader : JavalinRenderer.FileRendererLoader {
-        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions) && JTE.exists()) init() else Unit
     }
 
 }

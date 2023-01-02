@@ -11,7 +11,7 @@ import com.mitchellbosecke.pebble.loader.ClasspathLoader
 import io.javalin.http.Context
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
-import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.RenderingDependency.PEBBLE
 import io.javalin.rendering.util.Util
 import java.io.StringWriter
 
@@ -32,7 +32,7 @@ class JavalinPebble @JvmOverloads constructor(
         @JvmStatic
         @JvmOverloads
         fun init(pebbleEngine: PebbleEngine? = null) {
-            Util.throwIfNotAvailable(RenderingDependency.PEBBLE)
+            Util.throwIfNotAvailable(PEBBLE)
             JavalinRenderer.register(JavalinPebble(pebbleEngine ?: defaultPebbleEngine()), *extensions)
         }
 
@@ -43,7 +43,7 @@ class JavalinPebble @JvmOverloads constructor(
     }
 
     class Loader : JavalinRenderer.FileRendererLoader {
-        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions) && PEBBLE.exists()) init() else Unit
     }
 
 }

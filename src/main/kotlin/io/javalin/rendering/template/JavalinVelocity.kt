@@ -9,7 +9,7 @@ package io.javalin.rendering.template
 import io.javalin.http.Context
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
-import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.RenderingDependency.VELOCITY
 import io.javalin.rendering.util.Util
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
@@ -34,7 +34,7 @@ class JavalinVelocity @JvmOverloads constructor(
         @JvmStatic
         @JvmOverloads
         fun init(velocityEngine: VelocityEngine? = null) {
-            Util.throwIfNotAvailable(RenderingDependency.VELOCITY)
+            Util.throwIfNotAvailable(VELOCITY)
             JavalinRenderer.register(JavalinVelocity(velocityEngine ?: defaultVelocityEngine()), *extensions)
         }
 
@@ -45,7 +45,7 @@ class JavalinVelocity @JvmOverloads constructor(
     }
 
     class Loader : JavalinRenderer.FileRendererLoader {
-        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions) && VELOCITY.exists()) init() else Unit
     }
 
 }

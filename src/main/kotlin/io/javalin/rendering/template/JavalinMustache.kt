@@ -11,7 +11,7 @@ import com.github.mustachejava.MustacheFactory
 import io.javalin.http.Context
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
-import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.RenderingDependency.MUSTACHE
 import io.javalin.rendering.util.Util
 import java.io.StringWriter
 
@@ -31,7 +31,7 @@ class JavalinMustache @JvmOverloads constructor(
         @JvmStatic
         @JvmOverloads
         fun init(mustacheFactory: MustacheFactory? = null) {
-            Util.throwIfNotAvailable(RenderingDependency.MUSTACHE)
+            Util.throwIfNotAvailable(MUSTACHE)
             JavalinRenderer.register(JavalinMustache(mustacheFactory ?: defaultMustacheFactory()), *extensions)
         }
 
@@ -39,7 +39,7 @@ class JavalinMustache @JvmOverloads constructor(
     }
 
     class Loader : JavalinRenderer.FileRendererLoader {
-        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions) && MUSTACHE.exists()) init() else Unit
     }
 
 }

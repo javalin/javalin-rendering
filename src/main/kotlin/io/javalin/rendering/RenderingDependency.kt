@@ -26,8 +26,10 @@ enum class RenderingDependency(
     PEBBLE("Pebble", "com.mitchellbosecke.pebble.PebbleEngine", "io.pebbletemplates", "pebble", "3.1.5"),
     COMMONMARK("Commonmark", "org.commonmark.renderer.html.HtmlRenderer", "org.commonmark", "commonmark", "0.17.1"),
     STRING_TEMPLATE_4("StringTemplate4", "org.stringtemplate.v4.ST", "org.antlr", "ST4", "4.3.4"),
-}
+    ;
 
+    internal fun exists() = Util.classExists(this.testClass)
+}
 
 object Util {
     fun throwIfNotAvailable(dependency: RenderingDependency) {

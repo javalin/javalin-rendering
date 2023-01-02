@@ -9,7 +9,7 @@ package io.javalin.rendering.template
 import io.javalin.http.Context
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
-import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.RenderingDependency.THYMELEAF
 import io.javalin.rendering.util.Util
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.WebContext
@@ -36,7 +36,7 @@ class JavalinThymeleaf @JvmOverloads constructor(
         @JvmStatic
         @JvmOverloads
         fun init(templateEngine: TemplateEngine? = null) {
-            Util.throwIfNotAvailable(RenderingDependency.THYMELEAF)
+            Util.throwIfNotAvailable(THYMELEAF)
             JavalinRenderer.register(JavalinThymeleaf(templateEngine ?: defaultThymeLeafEngine()), *extensions)
         }
 
@@ -48,7 +48,7 @@ class JavalinThymeleaf @JvmOverloads constructor(
     }
 
     class Loader : JavalinRenderer.FileRendererLoader {
-        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions) && THYMELEAF.exists()) init() else Unit
     }
 
 }

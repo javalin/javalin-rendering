@@ -4,7 +4,7 @@ import io.javalin.http.Context
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
 import io.javalin.rendering.JavalinRenderer.register
-import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.RenderingDependency.STRING_TEMPLATE_4
 import io.javalin.rendering.util.Util.throwIfNotAvailable
 import org.stringtemplate.v4.STGroup
 import org.stringtemplate.v4.STRawGroupDir
@@ -59,7 +59,7 @@ class JavalinStringTemplate4 : FileRenderer {
         @JvmStatic
         @JvmOverloads
         fun init(consumer: Consumer<JavalinStringTemplate4Configuration>? = null) {
-            throwIfNotAvailable(RenderingDependency.STRING_TEMPLATE_4)
+            throwIfNotAvailable(STRING_TEMPLATE_4)
             register(JavalinStringTemplate4(), *extensions)
             val config = JavalinStringTemplate4Configuration()
             consumer?.accept(config)
@@ -72,7 +72,7 @@ class JavalinStringTemplate4 : FileRenderer {
     }
 
     class Loader : JavalinRenderer.FileRendererLoader {
-        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions) && STRING_TEMPLATE_4.exists()) init() else Unit
     }
 
 }

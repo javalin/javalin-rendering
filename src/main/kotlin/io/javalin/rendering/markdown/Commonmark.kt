@@ -9,7 +9,7 @@ package io.javalin.rendering.markdown
 import io.javalin.http.Context
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.JavalinRenderer
-import io.javalin.rendering.util.RenderingDependency
+import io.javalin.rendering.util.RenderingDependency.COMMONMARK
 import io.javalin.rendering.util.Util
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
@@ -30,7 +30,7 @@ class JavalinCommonmark @JvmOverloads constructor(
         @JvmStatic
         @JvmOverloads
         fun init(htmlRenderer: HtmlRenderer? = null, parser: Parser? = null) {
-            Util.throwIfNotAvailable(RenderingDependency.COMMONMARK)
+            Util.throwIfNotAvailable(COMMONMARK)
             val fileRenderer = JavalinCommonmark(htmlRenderer ?: defaultRenderer(), parser ?: defaultParser())
             JavalinRenderer.register(fileRenderer, *extensions)
         }
@@ -40,7 +40,7 @@ class JavalinCommonmark @JvmOverloads constructor(
     }
 
     class Loader : JavalinRenderer.FileRendererLoader {
-        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions)) init() else Unit
+        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions) && COMMONMARK.exists()) init() else Unit
     }
 
 }
