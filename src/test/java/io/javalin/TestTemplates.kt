@@ -21,7 +21,7 @@ import io.javalin.rendering.template.JavalinStringTemplate4
 import io.javalin.testtools.JavalinTest
 import org.apache.velocity.app.VelocityEngine
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestTemplates {
 

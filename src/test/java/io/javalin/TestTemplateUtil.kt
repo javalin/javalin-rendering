@@ -9,7 +9,9 @@ package io.javalin
 
 import io.javalin.rendering.template.TemplateUtil
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertThrows
+
 
 class TestTemplateUtil {
     @Test
@@ -18,9 +20,11 @@ class TestTemplateUtil {
         assertThat(model).isEqualTo(mapOf("foo" to "bar", "baz" to "qux"))
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun `model throws exception if number of arguments is odd`() {
-        TemplateUtil.model("foo", "bar", "baz")
+        assertThrows(IllegalArgumentException::class.java) {
+            TemplateUtil.model("foo", "bar", "baz")
+        }
     }
 
     @Test
