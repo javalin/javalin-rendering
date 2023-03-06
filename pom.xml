@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.javalin</groupId>
         <artifactId>javalin-parent</artifactId>
-        <version>5.4.0</version>
+        <version>5.4.2</version>
     </parent>
 
     <artifactId>javalin-rendering</artifactId>
@@ -40,7 +40,7 @@
     </issueManagement>
 
     <properties>
-        <javalin.version>(5.4.0,)</javalin.version>
+        <javalin.version>(5.4.2,)</javalin.version>
         <jte.version>2.2.1</jte.version>
         <copy-build-resources.skip>false</copy-build-resources.skip>
     </properties>
@@ -167,20 +167,6 @@
                             </resources>
                             <skip>${copy-build-resources.skip}</skip>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jetbrains.dokka</groupId>
-                <artifactId>dokka-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <id>attach-javadocs-dokka</id>
-                        <goals>
-                            <goal>javadocJar</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
