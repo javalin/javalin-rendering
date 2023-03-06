@@ -19,7 +19,7 @@
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -146,6 +146,7 @@
             <plugin>
                 <!-- this should probably be removed by fixing the javalin-parent -->
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>copy-pom-properties</id>
