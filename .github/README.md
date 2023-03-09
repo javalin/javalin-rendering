@@ -10,6 +10,27 @@
 * Chat on Discord: https://discord.gg/sgak4e5NKv
 * License summary: https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)
 
-## About this plugin
+## Javalin rendering
 
-Add stuff here
+The `javalin-rendering` artifact is an optional module for the Javalin web framework that provides a simple way to render HTML using popular template engines. The `javalin-rendering` artifact includes default implementations for several template engines, including JTE, Mustache, Velocity, Pebble, Handlebars, and Thymeleaf.
+
+## Add dependency
+
+### Maven
+
+```xml
+<dependency>
+    <groupId>io.javalin</groupId>
+    <artifactId>javalin-rendering</artifactId>
+    <version>5.4.2</version>
+</dependency>
+```
+
+### Gradle
+
+```groovy
+implementation "io.javalin:javalin-rendering:5.4.2"
+```
+
+### Usage
+Once you have included the `javalin-rendering` artifact and one of the supported template engine dependencies in your project, `Context#render` should automatically  render your templates. By default, the plugin will look in `src/main/resources/templates` for template files.
