@@ -32,5 +32,5 @@ The `javalin-rendering` artifact is an optional module for the Javalin web frame
 implementation "io.javalin:javalin-rendering:5.4.2"
 ```
 
-### Usage
+## Usage
 Once you have included the `javalin-rendering` artifact and one of the supported template engine dependencies in your project, `Context#render` should automatically  render your templates. By default, the plugin will look in `src/main/resources/templates` for template files.
