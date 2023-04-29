@@ -14,6 +14,8 @@
 
 The `javalin-rendering` artifact is an optional module for the Javalin web framework that provides a simple way to render HTML using popular template engines. The `javalin-rendering` artifact includes default implementations for several template engines, including JTE, Mustache, Velocity, Pebble, Handlebars, and Thymeleaf.
 
+DOCS: https://javalin.io/plugins/rendering
+
 ## Add dependency
 
 ### Maven
