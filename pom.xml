@@ -40,7 +40,7 @@
     </issueManagement>
 
     <properties>
-        <javalin.version>(5.4.2,)</javalin.version>
+        <javalin.version>(5.5.0,)</javalin.version>
         <jte.version>2.2.1</jte.version>
         <copy-build-resources.skip>false</copy-build-resources.skip>
     </properties>
