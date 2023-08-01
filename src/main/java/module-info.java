@@ -6,6 +6,7 @@ module io.javalin.rendering {
     requires static com.github.mustachejava;
     requires static freemarker;
     requires static gg.jte;
+    requires static gg.jte.runtime;
     requires static io.pebbletemplates;
 
 	exports io.javalin.rendering.template;
