@@ -8,7 +8,6 @@ package io.javalin.rendering.template
 
 import io.javalin.http.Context
 import io.javalin.rendering.FileRenderer
-import io.javalin.rendering.JavalinRenderer
 import io.javalin.rendering.util.RenderingDependency.THYMELEAF
 import io.javalin.rendering.util.Util
 import org.thymeleaf.TemplateEngine
@@ -21,34 +20,25 @@ class JavalinThymeleaf @JvmOverloads constructor(
     private var templateEngine: TemplateEngine = defaultThymeLeafEngine()
 ) : FileRenderer {
 
-    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
+    init {
+        Util.throwIfNotAvailable(THYMELEAF)
+    }
+
+    override fun render(filePath: String, model: Map<String, Any?>, context: Context): String {
         // ctx.req.servletContext that is passed to buildApplication has to match ctx.req.servletContext passed into
         // buildExchange. (application.servletContext === ctx.req.servletContext)
-        val application = JakartaServletWebApplication.buildApplication(ctx.req().servletContext)
-        val webExchange = application.buildExchange(ctx.req(), ctx.res())
-        val context = WebContext(webExchange, webExchange.locale, model)
-        return templateEngine.process(filePath, context)
+        val application = JakartaServletWebApplication.buildApplication(context.req().servletContext)
+        val webExchange = application.buildExchange(context.req(), context.res())
+        val webContext = WebContext(webExchange, webExchange.locale, model)
+        return templateEngine.process(filePath, webContext)
     }
 
     companion object {
-        val extensions = arrayOf(".html", ".tl", ".thyme", ".thymeleaf")
-
-        @JvmStatic
-        @JvmOverloads
-        fun init(templateEngine: TemplateEngine? = null) {
-            Util.throwIfNotAvailable(THYMELEAF)
-            JavalinRenderer.register(JavalinThymeleaf(templateEngine ?: defaultThymeLeafEngine()), *extensions)
-        }
-
         private fun defaultThymeLeafEngine() = TemplateEngine().apply {
             setTemplateResolver(ClassLoaderTemplateResolver().apply {
                 templateMode = TemplateMode.HTML
             })
         }
-    }
-
-    class Loader : JavalinRenderer.FileRendererLoader {
-        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions) && THYMELEAF.exists()) init() else Unit
     }
 
 }

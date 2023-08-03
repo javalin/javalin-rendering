@@ -6,11 +6,11 @@
     <parent>
         <groupId>io.javalin</groupId>
         <artifactId>javalin-parent</artifactId>
-        <version>5.6.2</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>javalin-rendering</artifactId>
-    <version>5.6.3-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
 
     <name>javalin-rendering</name>
     <description>Rendering engines for Javalin</description>
@@ -40,7 +40,7 @@
     </issueManagement>
 
     <properties>
-        <javalin.version>5.6.2</javalin.version>
+        <javalin.version>6.0.0-SNAPSHOT</javalin.version>
         <jte.version>2.2.1</jte.version>
         <copy-build-resources.skip>false</copy-build-resources.skip>
         <assertj.version>3.23.1</assertj.version>
@@ -115,7 +115,7 @@
         <dependency>
             <groupId>io.pebbletemplates</groupId>
             <artifactId>pebble</artifactId>
-            <version>3.1.5</version>
+            <version>3.1.6</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -134,12 +134,6 @@
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
             <version>0.19.0</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>ST4</artifactId>
-            <version>4.3.4</version>
             <optional>true</optional>
         </dependency>
         <!-- END OPTIONAL TEMPLATE ENGINES -->

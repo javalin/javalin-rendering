@@ -8,7 +8,6 @@ package io.javalin.rendering.markdown
 
 import io.javalin.http.Context
 import io.javalin.rendering.FileRenderer
-import io.javalin.rendering.JavalinRenderer
 import io.javalin.rendering.util.RenderingDependency.COMMONMARK
 import io.javalin.rendering.util.Util
 import org.commonmark.parser.Parser
@@ -19,28 +18,18 @@ class JavalinCommonmark @JvmOverloads constructor(
     private var parser: Parser = defaultParser()
 ) : FileRenderer {
 
-    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
+    init {
+        Util.throwIfNotAvailable(COMMONMARK)
+    }
+
+    override fun render(filePath: String, model: Map<String, Any?>, context: Context): String {
         val fileContent = JavalinCommonmark::class.java.getResource(filePath).readText()
         return renderer.render(parser.parse(fileContent))
     }
 
     companion object {
-        val extensions = arrayOf(".md", ".markdown")
-
-        @JvmStatic
-        @JvmOverloads
-        fun init(htmlRenderer: HtmlRenderer? = null, parser: Parser? = null) {
-            Util.throwIfNotAvailable(COMMONMARK)
-            val fileRenderer = JavalinCommonmark(htmlRenderer ?: defaultRenderer(), parser ?: defaultParser())
-            JavalinRenderer.register(fileRenderer, *extensions)
-        }
-
         fun defaultRenderer(): HtmlRenderer = HtmlRenderer.builder().build()
         fun defaultParser(): Parser = Parser.builder().build()
-    }
-
-    class Loader : JavalinRenderer.FileRendererLoader {
-        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions) && COMMONMARK.exists()) init() else Unit
     }
 
 }
