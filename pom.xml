@@ -41,7 +41,7 @@
 
     <properties>
         <javalin.version>6.0.0-SNAPSHOT</javalin.version>
-        <jte.version>2.2.1</jte.version>
+        <jte.version>3.0.2</jte.version>
         <copy-build-resources.skip>false</copy-build-resources.skip>
         <assertj.version>3.23.1</assertj.version>
         <junit.version>5.7.2</junit.version>
