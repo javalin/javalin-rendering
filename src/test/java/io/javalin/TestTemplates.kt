@@ -12,7 +12,6 @@ import com.mitchellbosecke.pebble.loader.ClasspathLoader
 import gg.jte.ContentType
 import gg.jte.TemplateEngine
 import io.javalin.jte.JteTestPage
-import io.javalin.jte.PrecompileJteTestClasses
 import io.javalin.rendering.FileRenderer
 import io.javalin.rendering.markdown.JavalinCommonmark
 import io.javalin.rendering.template.*
@@ -102,32 +101,32 @@ class TestTemplates {
             null,
             ContentType.Html,
             null,
-            PrecompileJteTestClasses.PACKAGE_NAME
+            "io.javalin.jte.precompiled"
         )
     )
 
     @Test
     fun `jte works`() = JavalinTest.test(app(javalinJte())) { app, http ->
         app.get("/hello") { it.render("test.jte", mapOf("page" to JteTestPage("hello", "world"))) }
-        assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
+        assertThat(http.get("/hello").body?.string()).describedAs("if this fails, you need to run mvn gg.jte:jte-maven-plugin:generate first").isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
     @Test
     fun `jte multiple params work`() = JavalinTest.test(app(javalinJte())) { app, http ->
         app.get("/hello") { it.render("multiple-params.jte", mapOf("one" to "hello", "two" to "world")) }
-        assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
+        assertThat(http.get("/hello").body?.string()).describedAs("if this fails, you need to run mvn gg.jte:jte-maven-plugin:generate first").isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
     @Test
     fun `jte kotlin works`() = JavalinTest.test(app(javalinJte())) { app, http ->
         app.get("/hello") { it.render("kte/test.kte", mapOf("page" to JteTestPage("hello", "world"))) }
-        assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
+        assertThat(http.get("/hello").body?.string()).describedAs("if this fails, you need to run mvn gg.jte:jte-maven-plugin:generate first").isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
     @Test
     fun `jte kotlin multiple params work`() = JavalinTest.test(app(javalinJte())) { app, http ->
         app.get("/hello") { it.render("kte/multiple-params.kte", mapOf("one" to "hello", "two" to "world")) }
-        assertThat(http.get("/hello").body?.string()).isEqualToIgnoringNewLines("<h1>hello world!</h1>")
+        assertThat(http.get("/hello").body?.string()).describedAs("if this fails, you need to run mvn gg.jte:jte-maven-plugin:generate first").isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
     @Test
