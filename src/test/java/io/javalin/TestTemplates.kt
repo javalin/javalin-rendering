@@ -18,7 +18,6 @@ import io.javalin.rendering.template.*
 import io.javalin.testtools.JavalinTest
 import org.apache.velocity.app.VelocityEngine
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class TestTemplates {
@@ -118,14 +117,12 @@ class TestTemplates {
         assertThat(http.get("/hello").body?.string()).describedAs("if this fails, you need to run mvn gg.jte:jte-maven-plugin:generate first").isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
-    @Disabled // looks like kotlin maven plugin does not pick up the generated test sources
     @Test
     fun `jte kotlin works`() = JavalinTest.test(app(javalinJte())) { app, http ->
         app.get("/hello") { it.render("kte/test.kte", mapOf("page" to JteTestPage("hello", "world"))) }
         assertThat(http.get("/hello").body?.string()).describedAs("if this fails, you need to run mvn gg.jte:jte-maven-plugin:generate first").isEqualToIgnoringNewLines("<h1>hello world!</h1>")
     }
 
-    @Disabled // looks like kotlin maven plugin does not pick up the generated test sources
     @Test
     fun `jte kotlin multiple params work`() = JavalinTest.test(app(javalinJte())) { app, http ->
         app.get("/hello") { it.render("kte/multiple-params.kte", mapOf("one" to "hello", "two" to "world")) }
