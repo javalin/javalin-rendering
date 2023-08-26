@@ -8,7 +8,6 @@ package io.javalin.rendering.template
 
 import io.javalin.http.Context
 import io.javalin.rendering.FileRenderer
-import io.javalin.rendering.JavalinRenderer
 import io.javalin.rendering.util.RenderingDependency.VELOCITY
 import io.javalin.rendering.util.Util
 import org.apache.velocity.VelocityContext
@@ -20,7 +19,11 @@ class JavalinVelocity @JvmOverloads constructor(
     private var velocityEngine: VelocityEngine = defaultVelocityEngine()
 ) : FileRenderer {
 
-    override fun render(filePath: String, model: Map<String, Any?>, ctx: Context): String {
+    init {
+        Util.throwIfNotAvailable(VELOCITY)
+    }
+
+    override fun render(filePath: String, model: Map<String, Any?>, context: Context): String {
         val stringWriter = StringWriter()
         velocityEngine.getTemplate(filePath, StandardCharsets.UTF_8.name()).merge(
             VelocityContext(model.toMutableMap()), stringWriter
@@ -29,23 +32,10 @@ class JavalinVelocity @JvmOverloads constructor(
     }
 
     companion object {
-        val extensions = arrayOf(".vm", ".vtl")
-
-        @JvmStatic
-        @JvmOverloads
-        fun init(velocityEngine: VelocityEngine? = null) {
-            Util.throwIfNotAvailable(VELOCITY)
-            JavalinRenderer.register(JavalinVelocity(velocityEngine ?: defaultVelocityEngine()), *extensions)
-        }
-
         fun defaultVelocityEngine() = VelocityEngine().apply {
             setProperty("resource.loaders", "class")
             setProperty("resource.loader.class.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader")
         }
-    }
-
-    class Loader : JavalinRenderer.FileRendererLoader {
-        override fun load() = if (!JavalinRenderer.hasRenderer(*extensions) && VELOCITY.exists()) init() else Unit
     }
 
 }

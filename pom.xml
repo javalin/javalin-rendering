@@ -6,11 +6,11 @@
     <parent>
         <groupId>io.javalin</groupId>
         <artifactId>javalin-parent</artifactId>
-        <version>5.6.1</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>javalin-rendering</artifactId>
-    <version>5.6.2-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
 
     <name>javalin-rendering</name>
     <description>Rendering engines for Javalin</description>
@@ -40,8 +40,8 @@
     </issueManagement>
 
     <properties>
-        <javalin.version>5.6.1</javalin.version>
-        <jte.version>2.2.1</jte.version>
+        <javalin.version>6.0.0-SNAPSHOT</javalin.version>
+        <jte.version>3.0.2</jte.version>
         <copy-build-resources.skip>false</copy-build-resources.skip>
         <assertj.version>3.23.1</assertj.version>
         <junit.version>5.7.2</junit.version>
@@ -115,7 +115,7 @@
         <dependency>
             <groupId>io.pebbletemplates</groupId>
             <artifactId>pebble</artifactId>
-            <version>3.1.5</version>
+            <version>3.1.6</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -134,12 +134,6 @@
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
             <version>0.19.0</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>ST4</artifactId>
-            <version>4.3.4</version>
             <optional>true</optional>
         </dependency>
         <!-- END OPTIONAL TEMPLATE ENGINES -->
@@ -171,6 +165,63 @@
                                 </resource>
                             </resources>
                             <skip>${copy-build-resources.skip}</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>gg.jte</groupId>
+                <artifactId>jte-maven-plugin</artifactId>
+                <version>${jte.version}</version>
+                <configuration>
+                    <sourceDirectory>${basedir}/src/test/resources/templates/jte</sourceDirectory>
+                    <targetDirectory>${project.build.directory}/generated-test-sources/jte</targetDirectory>
+                    <contentType>Html</contentType>
+                    <packageName>io.javalin.jte.precompiled</packageName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-test-sources/jte</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>test-compile</id>
+                        <configuration>
+                            <sourceDirs>
+                                <source>${project.basedir}/src/test/java</source>
+                                <source>${project.basedir}/src/test/kotlin</source>
+                                <source>${project.basedir}/target/generated-test-sources/jte</source>
+                            </sourceDirs>
                         </configuration>
                     </execution>
                 </executions>
