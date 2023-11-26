@@ -45,6 +45,7 @@
         <copy-build-resources.skip>false</copy-build-resources.skip>
         <assertj.version>3.23.1</assertj.version>
         <junit.version>5.7.2</junit.version>
+        <moditect.plugin.version>1.0.0.Final</moditect.plugin.version>
     </properties>
 
     <repositories>
@@ -222,6 +223,27 @@
                                 <source>${project.basedir}/src/test/kotlin</source>
                                 <source>${project.basedir}/target/generated-test-sources/jte</source>
                             </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.moditect</groupId>
+                <artifactId>moditect-maven-plugin</artifactId>
+                <version>1.0.0.Final</version>
+                <executions>
+                    <execution>
+                        <id>add-module-infos</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>add-module-info</goal>
+                        </goals>
+                        <configuration>
+                        <overwriteExistingFiles>true</overwriteExistingFiles>
+                            <module>
+                                <moduleInfoFile>./module-info.java</moduleInfoFile>
+                            </module>
                         </configuration>
                     </execution>
                 </executions>
